@@ -41,9 +41,9 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 
 ## Sprint 5 — Chess.com bot integration
 
-- [ ] Inspect current computer-game DOM and save minimal fixtures.
-- [ ] Parse board, orientation, turn, bot identity, and result.
-- [ ] Implement multi-signal fail-closed BotModeGuard.
+- [x] Inspect current public computer-game DOM and record selector evidence.
+- [ ] Parse board, orientation, turn, bot identity, and result (initial live read and synthetic SAN tests pass; result pending).
+- [x] Implement multi-signal fail-closed BotModeGuard with CPU tests.
 - [ ] Execute only verified legal bot-game moves.
 - [ ] Implement autoplay and bot ladder reporting.
 
@@ -67,3 +67,4 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - No Chess.com bot results have been measured.
 - Sprint 2 PR #8 passed CI and was merged by fast-forward; issue #2 closed. Sprint 3 held-out validation measured 728 positions for three checkpoints. One PUCT self-play game completed and supplied 160 positions; five-step fine-tuning worsened held-out value error, so that checkpoint is a pipeline proof only.
 - A scripted Fool's Mate proof recorded two local assisted positions, annotated both with Stockfish 19 at depth 4, assigned the mating blunder a 0.02 policy weight, and completed one warm-start training step. Its scripted source is explicit; no human or Chess.com result is inferred.
+- Sprint 4 PR #10 passed CPU CI and was integrated. On 2026-10-02, anonymous Chess.com computer-page inspection identified current board, piece, SAN, and bot selectors. A draft adapter read the initial bot position, but its move click timed out; no browser automation or bot result is claimed.

@@ -9,7 +9,7 @@ Chess-AI aims to measure how far a locally trained, compact chess student can pr
 | 2 | PGN, Stockfish teacher, trainer | Dataset manifest, training checkpoint, resume | Complete: PR #8, CI passed |
 | 3 | Search, self-play, evaluation | Local match JSON, speed and VRAM report | Complete: PR #9, CI passed |
 | 4 | Assist and incremental experience | SQLite records, post-game quality weights | In progress: issue #4 |
-| 5 | Bot-only browser adapter and ladder | Guard tests, current DOM fixtures, real games | Planned |
+| 5 | Bot-only browser adapter and ladder | Guard tests, current DOM fixtures, real games | In progress: initial live read; move click unresolved |
 | 6 | Release quality and dashboard | Docs, reproducibility replay, CI, PR | Planned |
 
 ## Acceptance rules
