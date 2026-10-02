@@ -4,10 +4,10 @@ Chess-AI aims to measure how far a locally trained, compact chess student can pr
 
 | Sprint | Deliverable | Exit evidence | Status |
 |---|---|---|---|
-| 0 | Audit, ADR, reproducible work plan | `task.md`, source links, architecture note | In progress |
+| 0 | Audit, ADR, reproducible work plan | `task.md`, source links, architecture note | Complete |
 | 1 | Local CUDA vertical slice | Special-move tests, smoke test, CI | Complete: PR #7, CI passed |
-| 2 | PGN, Stockfish teacher, trainer | Dataset manifest, training checkpoint, resume | In progress: issue #2 |
-| 3 | Search, self-play, evaluation | Local match JSON, speed and VRAM report | Planned |
+| 2 | PGN, Stockfish teacher, trainer | Dataset manifest, training checkpoint, resume | Complete: PR #8, CI passed |
+| 3 | Search, self-play, evaluation | Local match JSON, speed and VRAM report | In progress: issue #3 |
 | 4 | Assist and incremental experience | SQLite records, post-game quality weights | Planned |
 | 5 | Bot-only browser adapter and ladder | Guard tests, current DOM fixtures, real games | Planned |
 | 6 | Release quality and dashboard | Docs, reproducibility replay, CI, PR | Planned |

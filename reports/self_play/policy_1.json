@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "source": "student_self_play",
+  "checkpoint": "runs/lichess-distill-256/inference.pt",
+  "checkpoint_sha256": "be2600e8b3e1b612558ceeaae203faa6386c71e79d411ab80e8005d8fa0f897b",
+  "output": "data/processed/self-play-policy-1.jsonl",
+  "output_sha256": "a8898081783270b4c320ca1c55b9b214575dc01c65a4b4a15cfc4f028b9480ec",
+  "games": 1,
+  "results_white_perspective": {
+    "W": 0,
+    "D": 1,
+    "L": 0,
+    "U": 0
+  },
+  "completed_positions": 46,
+  "search": "policy",
+  "simulations": 0,
+  "temperature": 1.0,
+  "temperature_plies": 20,
+  "noise_alpha": null,
+  "seed": 42,
+  "max_plies": 300,
+  "nodes": 46,
+  "inferences": 46,
+  "elapsed_sec": 0.6724431970000069,
+  "details": [
+    {
+      "game": 1,
+      "result": "D",
+      "plies": 46,
+      "termination": "THREEFOLD_REPETITION"
+    }
+  ],
+  "created_at": "2026-10-02T21:54:12.068741+00:00"
+}

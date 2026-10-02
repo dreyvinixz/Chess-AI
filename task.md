@@ -26,9 +26,10 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 
 ## Sprint 3 — Search and local strength
 
-- [ ] Compare policy-only and PUCT against random and greedy baselines.
-- [ ] Add local terminal play and optional self-play.
-- [ ] Publish measured benchmark results without invented strength claims.
+- [x] Compare policy-only and PUCT against the greedy baseline using the same checkpoint.
+- [x] Add local terminal play and optional self-play with complete-game targets.
+- [x] Measure held-out validation and self-play speed without invented strength claims.
+- [ ] Add limited Stockfish baseline and broader match sample before making strength claims.
 
 ## Sprint 4 — Human experience
 
@@ -62,3 +63,4 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - Lichess January 2013 CC0 archive SHA-256 verified against the official list. One hundred accepted games yielded 5,495/728/804 train/validation/test positions; 680 duplicates removed. The GTX 1650 completed 100 supervised steps and 20 warm-started distillation steps. Full manifests and reports are under `reports/`.
 - Ten attempted local games each against random and greedy were recorded with unfinished games separate from draws. No Chess.com bot game has been played.
 - No Chess.com bot results have been measured.
+- Sprint 2 PR #8 passed CI and was merged by fast-forward; issue #2 closed. Sprint 3 held-out validation measured 728 positions for three checkpoints. One PUCT self-play game completed and supplied 160 positions; five-step fine-tuning worsened held-out value error, so that checkpoint is a pipeline proof only.

@@ -1,0 +1,96 @@
+{
+  "run_dir": "runs/self-play-puct-proof",
+  "checkpoint": "runs/self-play-puct-proof/checkpoint.pt",
+  "config": {
+    "seed": 42,
+    "model": {
+      "channels": 64,
+      "blocks": 4,
+      "policy_channels": 2
+    },
+    "training": {
+      "batch_size": 64,
+      "epochs": 5,
+      "learning_rate": 0.0005,
+      "accumulation_steps": 2,
+      "max_steps": 5,
+      "amp": true,
+      "workers": 2,
+      "value_weight": 1.0
+    },
+    "search": {
+      "simulations": 64,
+      "c_puct": 1.5
+    },
+    "hardware": {
+      "max_vram_mb": 3500
+    },
+    "dataset": {
+      "min_elo": 2000,
+      "split_seed": 42
+    },
+    "teacher": {
+      "depth": 12,
+      "multipv": 5,
+      "temperature_cp": 100
+    },
+    "self_play": {
+      "games": 4
+    },
+    "logging": {
+      "run_dir": "runs"
+    },
+    "initialization": {
+      "checkpoint": "runs/lichess-distill-256/inference.pt",
+      "sha256": "be2600e8b3e1b612558ceeaae203faa6386c71e79d411ab80e8005d8fa0f897b",
+      "git_commit": "663e3ef606c0ce125e5e19fee06763e1205e5cf4"
+    }
+  },
+  "environment": {
+    "git_commit": "fb68f6958b45a29d134bfbca91dfb0fd96c092ab",
+    "git_dirty": true,
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+    "seed": 42,
+    "dataset_fingerprint": "fdfc2b58eefded8168b3845246d8024882fe8fdf7e4bd4fd7c022502ceb5bcdb",
+    "initialization": {
+      "checkpoint": "runs/lichess-distill-256/inference.pt",
+      "sha256": "be2600e8b3e1b612558ceeaae203faa6386c71e79d411ab80e8005d8fa0f897b",
+      "git_commit": "663e3ef606c0ce125e5e19fee06763e1205e5cf4"
+    },
+    "timestamp": "2026-10-02T21:55:09.043577+00:00"
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "duration_sec": 0.7055695090000142,
+      "examples": 160,
+      "examples_per_sec": 226.76664146485322,
+      "batch_size": 64
+    },
+    {
+      "epoch": 2,
+      "duration_sec": 0.15324569300000235,
+      "examples": 128,
+      "examples_per_sec": 835.2547564201993,
+      "batch_size": 64
+    }
+  ],
+  "last_metrics": {
+    "epoch": "2",
+    "step": "5",
+    "policy_loss": "2.676962375640869",
+    "value_loss": "0.08255605399608612",
+    "loss": "2.7595183849334717",
+    "entropy": "2.781996488571167",
+    "learning_rate": "0.00045702882373436317",
+    "vram_mb": "134",
+    "gpu_util_pct": "",
+    "examples_per_sec": "1248.360868045122",
+    "batch_size": "64",
+    "microbatch_size": "64",
+    "epoch_elapsed_sec": "0.15101150600000324"
+  }
+}

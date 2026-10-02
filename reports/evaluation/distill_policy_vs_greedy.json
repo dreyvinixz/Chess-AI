@@ -1,0 +1,51 @@
+{
+  "opponent": "greedy",
+  "games": 4,
+  "search": "policy",
+  "simulations": 0,
+  "seed": 42,
+  "results": {
+    "W": 0,
+    "D": 4,
+    "L": 0,
+    "U": 0
+  },
+  "completed_games": 4,
+  "score": 0.5,
+  "details": [
+    {
+      "game": 1,
+      "color": "white",
+      "result": "D",
+      "plies": 131,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 2,
+      "color": "black",
+      "result": "D",
+      "plies": 273,
+      "pgn_result": "1/2-1/2",
+      "termination": "STALEMATE"
+    },
+    {
+      "game": 3,
+      "color": "white",
+      "result": "D",
+      "plies": 292,
+      "pgn_result": "1/2-1/2",
+      "termination": "STALEMATE"
+    },
+    {
+      "game": 4,
+      "color": "black",
+      "result": "D",
+      "plies": 170,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    }
+  ],
+  "timestamp": "2026-10-02T21:56:37.843664+00:00",
+  "checkpoint": "runs/lichess-distill-256/inference.pt"
+}

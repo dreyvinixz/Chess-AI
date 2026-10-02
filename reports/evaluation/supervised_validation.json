@@ -1,0 +1,12 @@
+{
+  "positions": 728,
+  "policy_cross_entropy": 3.169654741392031,
+  "value_mse": 1.2006862877489446,
+  "top1_target_agreement": 0.12912087912087913,
+  "dataset": "data/processed/lichess-2013-01-100/validation.jsonl",
+  "dataset_sha256": "50d54cfc77a478f2f02914213069627217ab7dfcce1dadb6d85e00eb92cfe367",
+  "checkpoint": "runs/lichess-supervised-100/inference.pt",
+  "checkpoint_sha256": "17433c1de161c1c6744b2be53ad57dfc8b67758ef1d5fa732d8d58c60a8cb937",
+  "device": "cuda",
+  "timestamp": "2026-10-02T21:53:43.050524+00:00"
+}

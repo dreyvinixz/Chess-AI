@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "source": "student_self_play",
+  "checkpoint": "runs/lichess-distill-256/inference.pt",
+  "checkpoint_sha256": "be2600e8b3e1b612558ceeaae203faa6386c71e79d411ab80e8005d8fa0f897b",
+  "output": "data/processed/self-play-puct-1.jsonl",
+  "output_sha256": "fdfc2b58eefded8168b3845246d8024882fe8fdf7e4bd4fd7c022502ceb5bcdb",
+  "games": 1,
+  "results_white_perspective": {
+    "W": 0,
+    "D": 0,
+    "L": 1,
+    "U": 0
+  },
+  "completed_positions": 160,
+  "search": "puct",
+  "simulations": 16,
+  "temperature": 1.0,
+  "temperature_plies": 20,
+  "noise_alpha": 0.3,
+  "seed": 42,
+  "max_plies": 300,
+  "nodes": 2560,
+  "inferences": 2695,
+  "elapsed_sec": 5.681439179999984,
+  "details": [
+    {
+      "game": 1,
+      "result": "L",
+      "plies": 160,
+      "termination": "CHECKMATE"
+    }
+  ],
+  "created_at": "2026-10-02T21:54:36.719924+00:00"
+}
