@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "source": "data/processed/sample/train.jsonl",
+  "source_sha256": "a954363417c7e69708f63c3cd0409f7d6114ad65617eb328950e6f355386c24c",
+  "output": "data/processed/sample/teacher-v3.jsonl",
+  "output_sha256": "b1924dc049e17e2dcc604e493c030206e1d92a47b544ad21d94ec3f666445f12",
+  "engine": {
+    "name": "Stockfish 19",
+    "author": "the Stockfish developers (see AUTHORS file)"
+  },
+  "engine_sha256": "0f83d24cc46d2c66c60f16001af5444873bc112b7d028594513426894c12da19",
+  "depth": 4,
+  "multipv": 2,
+  "temperature_cp": 100.0,
+  "positions": 5,
+  "created_at": "2026-10-02T21:24:12.703116+00:00"
+}

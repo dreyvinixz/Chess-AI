@@ -1,0 +1,8 @@
+{
+  "source": "https://database.lichess.org/standard/lichess_db_standard_rated_2013-01.pgn.zst",
+  "file": "/mnt/c/Users/User/Chess-AI/data/raw/lichess_db_standard_rated_2013-01.pgn.zst",
+  "sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+  "size_bytes": 17761302,
+  "license": "CC0-1.0",
+  "verified_at": "2026-10-02T21:32:55.076876+00:00"
+}

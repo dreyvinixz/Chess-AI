@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "source": "data/processed/lichess-2013-01-100/train.jsonl",
+  "source_sha256": "37d2583c2027810698efffe1041ff4da519450dc2b7e003e80801caba1dd6618",
+  "output": "data/processed/lichess-2013-01-100/teacher-256.jsonl",
+  "output_sha256": "aa677b4cf0ac7dbdd327481eceb6999acaff98cfb27997167758a0e381c314d3",
+  "engine": {
+    "name": "Stockfish 19",
+    "author": "the Stockfish developers (see AUTHORS file)"
+  },
+  "engine_sha256": "0f83d24cc46d2c66c60f16001af5444873bc112b7d028594513426894c12da19",
+  "depth": 8,
+  "multipv": 3,
+  "temperature_cp": 100.0,
+  "positions": 256,
+  "sample_seed": 42,
+  "created_at": "2026-10-02T21:39:23.449747+00:00"
+}

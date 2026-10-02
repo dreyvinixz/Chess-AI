@@ -1,0 +1,15 @@
+{
+  "parameters": 2965255,
+  "checkpoint_bytes": 11888478,
+  "checkpoint": "runs/lichess-distill-256/inference.pt",
+  "git_commit": "663e3ef606c0ce125e5e19fee06763e1205e5cf4",
+  "git_dirty": false,
+  "timestamp": "2026-10-02T21:42:17.423088+00:00",
+  "torch": "2.6.0+cu124",
+  "cuda_runtime": "12.4",
+  "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+  "device": "cuda",
+  "inference_ms": 2.2382498500002157,
+  "peak_vram_mb": 20.6,
+  "iterations": 100
+}

@@ -1,0 +1,107 @@
+{
+  "run_dir": "runs/gtx1650-smoke",
+  "checkpoint": "runs/gtx1650-smoke/checkpoint.pt",
+  "config": {
+    "seed": 42,
+    "model": {
+      "channels": 64,
+      "blocks": 4,
+      "policy_channels": 2
+    },
+    "training": {
+      "batch_size": 64,
+      "epochs": 5,
+      "learning_rate": 0.0005,
+      "accumulation_steps": 2,
+      "max_steps": 0,
+      "amp": true,
+      "workers": 2,
+      "value_weight": 1.0
+    },
+    "search": {
+      "simulations": 64,
+      "c_puct": 1.5
+    },
+    "hardware": {
+      "max_vram_mb": 3500
+    },
+    "dataset": {
+      "min_elo": 2000,
+      "split_seed": 42
+    },
+    "teacher": {
+      "depth": 12,
+      "multipv": 5,
+      "temperature_cp": 100
+    },
+    "self_play": {
+      "games": 4
+    },
+    "logging": {
+      "run_dir": "runs"
+    }
+  },
+  "environment": {
+    "git_commit": "f8cf83772c333f25dfbc817d574006f42c091443",
+    "git_dirty": false,
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+    "seed": 42,
+    "dataset_fingerprint": "b1924dc049e17e2dcc604e493c030206e1d92a47b544ad21d94ec3f666445f12",
+    "timestamp": "2026-10-02T21:29:52.720489+00:00"
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "duration_sec": 0.5868975920000139,
+      "examples": 5,
+      "examples_per_sec": 8.519350250692689,
+      "batch_size": 64
+    },
+    {
+      "epoch": 2,
+      "duration_sec": 0.03512365500000669,
+      "examples": 5,
+      "examples_per_sec": 142.35116985881854,
+      "batch_size": 64
+    },
+    {
+      "epoch": 3,
+      "duration_sec": 0.030478743000003305,
+      "examples": 5,
+      "examples_per_sec": 164.04670947886711,
+      "batch_size": 64
+    },
+    {
+      "epoch": 4,
+      "duration_sec": 0.03152233600002319,
+      "examples": 5,
+      "examples_per_sec": 158.61531117417115,
+      "batch_size": 64
+    },
+    {
+      "epoch": 5,
+      "duration_sec": 0.027411700000016026,
+      "examples": 5,
+      "examples_per_sec": 182.40130885310586,
+      "batch_size": 64
+    }
+  ],
+  "last_metrics": {
+    "epoch": "5",
+    "step": "5",
+    "policy_loss": "1.2554614543914795",
+    "value_loss": "0.001820177654735744",
+    "loss": "1.2572816610336304",
+    "entropy": "2.126725912094116",
+    "learning_rate": "9.297117626563684e-05",
+    "vram_mb": "74",
+    "gpu_util_pct": "",
+    "examples_per_sec": "316.5379159247716",
+    "batch_size": "5",
+    "microbatch_size": "5",
+    "epoch_elapsed_sec": "0.023030265000045347"
+  }
+}

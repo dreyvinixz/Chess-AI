@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "source": "data/raw/lichess_db_standard_rated_2013-01.pgn.zst",
+  "sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+  "files": {
+    "train": "37d2583c2027810698efffe1041ff4da519450dc2b7e003e80801caba1dd6618",
+    "validation": "50d54cfc77a478f2f02914213069627217ab7dfcce1dadb6d85e00eb92cfe367",
+    "test": "250141ed538b437b2718007ca817dfbc153a1c9351bdf76d0561fc7a6775db5a"
+  },
+  "games": 100,
+  "positions": {
+    "train": 5495,
+    "validation": 728,
+    "test": 804
+  },
+  "duplicates_skipped": 680,
+  "deduplicate": true,
+  "min_elo": 2000,
+  "split_seed": 42,
+  "created_at": "2026-10-02T21:33:38.738861+00:00"
+}

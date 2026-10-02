@@ -6,7 +6,7 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 
 - [x] Inspect destination Git state, FrameBridge presentation, WSL2, Python, and GPU.
 - [x] Research official WSL CUDA, PyTorch, Lichess data, and GPL dependency sources.
-- [ ] Record measured architecture proof of concept in `docs/MODEL_DESIGN.md`.
+- [x] Record measured architecture proof of concept in `docs/MODEL_DESIGN.md`.
 - [x] Create GitHub issues #1 through #6 for the sprint deliverables.
 
 ## Sprint 1 — Local vertical slice
@@ -15,14 +15,14 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - [x] Encode positions and every legal move, including special moves.
 - [x] Run the compact network, mask legal moves, apply a move.
 - [x] Run CUDA doctor and smoke test on WSL2 GTX 1650.
-- [ ] Verify CI on CPU.
+- [x] Verify CI on CPU (GitHub Actions run `37064914976`, PR #7 merged).
 
 ## Sprint 2 — Data and training
 
-- [ ] Stream licensed PGN with game-level splits and source fingerprints.
-- [ ] Generate offline Stockfish multi-PV labels.
-- [ ] Train, resume, and evaluate checkpoints.
-- [ ] Measure VRAM, latency, and throughput on the target GPU.
+- [x] Stream licensed PGN with game-level splits, deduplication, and source/output fingerprints.
+- [x] Generate offline Stockfish multi-PV labels, including WDL and teacher manifest.
+- [x] Train, resume, warm-start distillation, and evaluate local checkpoints.
+- [x] Measure VRAM, latency, and throughput on the target GPU (bounded datasets; see reports).
 
 ## Sprint 3 — Search and local strength
 
@@ -58,4 +58,7 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - `pytest -q`: 12 passed. `ruff check src tests`: passed.
 - `CUDA_VISIBLE_DEVICES="" pytest -q`: 12 passed. CUDA smoke test passed. The final debug checkpoint recorded Git commit `2b89cb6`, `git_dirty=false`, and the 14-position dataset SHA-256.
 - `python -m build`: source distribution and wheel built. The policy projection was reduced from 21,016,149 to 2,665,831 parameters after profiling; see `reports/`.
+- Stockfish 19 official release downloaded inside ignored `tools/stockfish-local/` with SHA-256 verification. Five positions labeled from the sample PGN; one showed MultiPV and UCI WDL targets. The teacher-labeled data completed a local CUDA training run.
+- Lichess January 2013 CC0 archive SHA-256 verified against the official list. One hundred accepted games yielded 5,495/728/804 train/validation/test positions; 680 duplicates removed. The GTX 1650 completed 100 supervised steps and 20 warm-started distillation steps. Full manifests and reports are under `reports/`.
+- Ten attempted local games each against random and greedy were recorded with unfinished games separate from draws. No Chess.com bot game has been played.
 - No Chess.com bot results have been measured.

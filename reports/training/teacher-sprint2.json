@@ -1,0 +1,79 @@
+{
+  "run_dir": "runs/teacher-sprint2",
+  "checkpoint": "runs/teacher-sprint2/checkpoint.pt",
+  "config": {
+    "seed": 42,
+    "model": {
+      "channels": 16,
+      "blocks": 1,
+      "policy_channels": 2
+    },
+    "training": {
+      "batch_size": 4,
+      "epochs": 1,
+      "learning_rate": 0.001,
+      "accumulation_steps": 1,
+      "max_steps": 2,
+      "amp": false,
+      "workers": 0,
+      "value_weight": 1.0
+    },
+    "search": {
+      "simulations": 4,
+      "c_puct": 1.5
+    },
+    "hardware": {
+      "max_vram_mb": 3500
+    },
+    "dataset": {
+      "min_elo": 0,
+      "split_seed": 42
+    },
+    "teacher": {
+      "depth": 4,
+      "multipv": 2,
+      "temperature_cp": 100
+    },
+    "self_play": {
+      "games": 1
+    },
+    "logging": {
+      "run_dir": "runs"
+    }
+  },
+  "environment": {
+    "git_commit": "0150448bfad32103103e44e1e02c1ca9aa3fa8f8",
+    "git_dirty": false,
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+    "seed": 42,
+    "dataset_fingerprint": "b1924dc049e17e2dcc604e493c030206e1d92a47b544ad21d94ec3f666445f12",
+    "timestamp": "2026-10-02T21:27:05.865629+00:00"
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "duration_sec": 0.47092961100003095,
+      "examples": 5,
+      "examples_per_sec": 10.617274449073554,
+      "batch_size": 4
+    }
+  ],
+  "last_metrics": {
+    "epoch": "1",
+    "step": "2",
+    "policy_loss": "2.903089761734009",
+    "value_loss": "0.0014857748756185174",
+    "loss": "2.9045755863189697",
+    "entropy": "2.987253189086914",
+    "learning_rate": "0.001",
+    "vram_mb": "68",
+    "gpu_util_pct": "",
+    "examples_per_sec": "42.40547247708357",
+    "batch_size": "1",
+    "microbatch_size": "1",
+    "epoch_elapsed_sec": "0.46887164299999995"
+  }
+}

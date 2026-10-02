@@ -12,7 +12,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
       - run: python -m pip install -e '.[dev]'
-      - run: ruff check src tests
+      - run: ruff check src tests scripts
       - run: pytest -q
       - run: chess-ai smoke-test
       - run: python -m build

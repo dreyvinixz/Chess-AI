@@ -6,9 +6,12 @@ The measured debug-profile sizing run on a GTX 1650 Max-Q, PyTorch 2.6.0+cu124, 
 
 | Metric | Result |
 |---|---|
-| GTX 1650 inference peak allocated VRAM, debug profile | 19.4 MiB after projection change; excludes CUDA context and training |
-| Training positions/second | Not measured |
-| Student score vs random | Not measured |
-| Student score vs greedy | Not measured |
+| GTX 1650 inference, distillation checkpoint | 2.24 ms/position over 100 calls; 20.6 MiB peak allocated VRAM; 2,965,255 parameters |
+| GTX 1650 training, 100 supervised steps | 112 MiB peak allocated VRAM; 1,261 examples/s over first 5,495-position epoch |
+| GTX 1650 training, 20 distillation steps | 135 MiB peak allocated VRAM; 256 positions, five epochs |
+| Student vs random, policy-only, 10 attempted games | 2W / 7D / 0L / 1 unfinished; 61.1% over 9 completed |
+| Student vs greedy, policy-only, 10 attempted games | 0W / 8D / 1L / 1 unfinished; 44.4% over 9 completed |
 | Student score vs Stockfish | Not measured |
 | Chess.com bot ladder | Not measured |
+
+The game results use the **supervised** checkpoint after 100 steps, before teacher distillation. The public sample contains 100 rated Lichess games from January 2013, filtered to both players at least 2000 and deduplicated by board state. Ten attempted baseline games per opponent are too few for an Elo estimate. Unfinished games at 300 plies are excluded from match score. Training throughput on this small dataset is not a sustained large-dataset benchmark. The JSON reports contain exact run metadata and per-game outcomes.

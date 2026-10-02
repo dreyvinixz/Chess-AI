@@ -5,12 +5,12 @@
   "torch": "2.6.0+cu124",
   "cuda_available": true,
   "cuda_runtime": "12.4",
-  "stockfish": null,
+  "stockfish": "/mnt/c/Users/User/Chess-AI/tools/stockfish-local/stockfish",
   "browser_automation": false,
   "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
   "vram_mb": 4096,
   "compute_capability": "7.5",
   "fp16_tested": true,
-  "nvidia_smi": "0, 131, 66",
-  "environment": "WARNING"
+  "nvidia_smi": "0, 133, 68",
+  "environment": "READY"
 }

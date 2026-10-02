@@ -1,0 +1,99 @@
+{
+  "opponent": "greedy",
+  "games": 10,
+  "search": "policy",
+  "simulations": 16,
+  "seed": 42,
+  "results": {
+    "W": 0,
+    "D": 8,
+    "L": 1,
+    "U": 1
+  },
+  "completed_games": 9,
+  "score": 0.4444444444444444,
+  "details": [
+    {
+      "game": 1,
+      "color": "white",
+      "result": "L",
+      "plies": 52,
+      "pgn_result": "0-1",
+      "termination": "CHECKMATE"
+    },
+    {
+      "game": 2,
+      "color": "black",
+      "result": "D",
+      "plies": 135,
+      "pgn_result": "1/2-1/2",
+      "termination": "STALEMATE"
+    },
+    {
+      "game": 3,
+      "color": "white",
+      "result": "D",
+      "plies": 107,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 4,
+      "color": "black",
+      "result": "D",
+      "plies": 99,
+      "pgn_result": "1/2-1/2",
+      "termination": "STALEMATE"
+    },
+    {
+      "game": 5,
+      "color": "white",
+      "result": "U",
+      "plies": 300,
+      "pgn_result": "*",
+      "termination": "PLY_CAP"
+    },
+    {
+      "game": 6,
+      "color": "black",
+      "result": "D",
+      "plies": 115,
+      "pgn_result": "1/2-1/2",
+      "termination": "STALEMATE"
+    },
+    {
+      "game": 7,
+      "color": "white",
+      "result": "D",
+      "plies": 178,
+      "pgn_result": "1/2-1/2",
+      "termination": "STALEMATE"
+    },
+    {
+      "game": 8,
+      "color": "black",
+      "result": "D",
+      "plies": 108,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 9,
+      "color": "white",
+      "result": "D",
+      "plies": 199,
+      "pgn_result": "1/2-1/2",
+      "termination": "INSUFFICIENT_MATERIAL"
+    },
+    {
+      "game": 10,
+      "color": "black",
+      "result": "D",
+      "plies": 135,
+      "pgn_result": "1/2-1/2",
+      "termination": "STALEMATE"
+    }
+  ],
+  "timestamp": "2026-10-02T21:38:38.185399+00:00",
+  "checkpoint": "runs/lichess-supervised-100/inference.pt"
+}

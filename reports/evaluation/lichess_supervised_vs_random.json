@@ -1,0 +1,99 @@
+{
+  "opponent": "random",
+  "games": 10,
+  "search": "policy",
+  "simulations": 16,
+  "seed": 42,
+  "results": {
+    "W": 2,
+    "D": 7,
+    "L": 0,
+    "U": 1
+  },
+  "completed_games": 9,
+  "score": 0.6111111111111112,
+  "details": [
+    {
+      "game": 1,
+      "color": "white",
+      "result": "D",
+      "plies": 169,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 2,
+      "color": "black",
+      "result": "D",
+      "plies": 158,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 3,
+      "color": "white",
+      "result": "D",
+      "plies": 288,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 4,
+      "color": "black",
+      "result": "W",
+      "plies": 88,
+      "pgn_result": "0-1",
+      "termination": "CHECKMATE"
+    },
+    {
+      "game": 5,
+      "color": "white",
+      "result": "D",
+      "plies": 183,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 6,
+      "color": "black",
+      "result": "D",
+      "plies": 56,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 7,
+      "color": "white",
+      "result": "U",
+      "plies": 300,
+      "pgn_result": "*",
+      "termination": "PLY_CAP"
+    },
+    {
+      "game": 8,
+      "color": "black",
+      "result": "D",
+      "plies": 78,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 9,
+      "color": "white",
+      "result": "W",
+      "plies": 85,
+      "pgn_result": "1-0",
+      "termination": "CHECKMATE"
+    },
+    {
+      "game": 10,
+      "color": "black",
+      "result": "D",
+      "plies": 286,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    }
+  ],
+  "timestamp": "2026-10-02T21:37:36.183529+00:00",
+  "checkpoint": "runs/lichess-supervised-100/inference.pt"
+}

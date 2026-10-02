@@ -1,0 +1,117 @@
+{
+  "run_dir": "runs/lichess-distill-256",
+  "checkpoint": "runs/lichess-distill-256/checkpoint.pt",
+  "config": {
+    "seed": 42,
+    "model": {
+      "channels": 64,
+      "blocks": 4,
+      "policy_channels": 2
+    },
+    "training": {
+      "batch_size": 64,
+      "epochs": 5,
+      "learning_rate": 0.0005,
+      "accumulation_steps": 2,
+      "max_steps": 20,
+      "amp": true,
+      "workers": 2,
+      "value_weight": 1.0
+    },
+    "search": {
+      "simulations": 64,
+      "c_puct": 1.5
+    },
+    "hardware": {
+      "max_vram_mb": 3500
+    },
+    "dataset": {
+      "min_elo": 2000,
+      "split_seed": 42
+    },
+    "teacher": {
+      "depth": 12,
+      "multipv": 5,
+      "temperature_cp": 100
+    },
+    "self_play": {
+      "games": 4
+    },
+    "logging": {
+      "run_dir": "runs"
+    },
+    "initialization": {
+      "checkpoint": "runs/lichess-supervised-100/inference.pt",
+      "sha256": "17433c1de161c1c6744b2be53ad57dfc8b67758ef1d5fa732d8d58c60a8cb937",
+      "git_commit": "cf51b3fee9260dd4329f2d335955d8a313a6d5fa"
+    }
+  },
+  "environment": {
+    "git_commit": "663e3ef606c0ce125e5e19fee06763e1205e5cf4",
+    "git_dirty": false,
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+    "seed": 42,
+    "dataset_fingerprint": "aa677b4cf0ac7dbdd327481eceb6999acaff98cfb27997167758a0e381c314d3",
+    "initialization": {
+      "checkpoint": "runs/lichess-supervised-100/inference.pt",
+      "sha256": "17433c1de161c1c6744b2be53ad57dfc8b67758ef1d5fa732d8d58c60a8cb937",
+      "git_commit": "cf51b3fee9260dd4329f2d335955d8a313a6d5fa"
+    },
+    "timestamp": "2026-10-02T21:41:46.414985+00:00"
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "duration_sec": 0.7665659539999865,
+      "examples": 256,
+      "examples_per_sec": 333.9564312430111,
+      "batch_size": 64
+    },
+    {
+      "epoch": 2,
+      "duration_sec": 0.20438222699999642,
+      "examples": 256,
+      "examples_per_sec": 1252.5474785217343,
+      "batch_size": 64
+    },
+    {
+      "epoch": 3,
+      "duration_sec": 0.22010930200002576,
+      "examples": 256,
+      "examples_per_sec": 1163.0561255085881,
+      "batch_size": 64
+    },
+    {
+      "epoch": 4,
+      "duration_sec": 0.16829991600002359,
+      "examples": 256,
+      "examples_per_sec": 1521.0903123073304,
+      "batch_size": 64
+    },
+    {
+      "epoch": 5,
+      "duration_sec": 0.19621212999999216,
+      "examples": 256,
+      "examples_per_sec": 1304.7080323092832,
+      "batch_size": 64
+    }
+  ],
+  "last_metrics": {
+    "epoch": "5",
+    "step": "20",
+    "policy_loss": "2.5047097206115723",
+    "value_loss": "0.07698807120323181",
+    "loss": "2.581697702407837",
+    "entropy": "2.7851152420043945",
+    "learning_rate": "9.297117626563684e-05",
+    "vram_mb": "135",
+    "gpu_util_pct": "29",
+    "examples_per_sec": "1007.8326073183683",
+    "batch_size": "64",
+    "microbatch_size": "64",
+    "epoch_elapsed_sec": "0.19477927299999465"
+  }
+}

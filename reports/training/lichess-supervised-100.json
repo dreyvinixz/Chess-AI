@@ -1,0 +1,86 @@
+{
+  "run_dir": "runs/lichess-supervised-100",
+  "checkpoint": "runs/lichess-supervised-100/checkpoint.pt",
+  "config": {
+    "seed": 42,
+    "model": {
+      "channels": 64,
+      "blocks": 4,
+      "policy_channels": 2
+    },
+    "training": {
+      "batch_size": 64,
+      "epochs": 5,
+      "learning_rate": 0.0005,
+      "accumulation_steps": 2,
+      "max_steps": 100,
+      "amp": true,
+      "workers": 2,
+      "value_weight": 1.0
+    },
+    "search": {
+      "simulations": 64,
+      "c_puct": 1.5
+    },
+    "hardware": {
+      "max_vram_mb": 3500
+    },
+    "dataset": {
+      "min_elo": 2000,
+      "split_seed": 42
+    },
+    "teacher": {
+      "depth": 12,
+      "multipv": 5,
+      "temperature_cp": 100
+    },
+    "self_play": {
+      "games": 4
+    },
+    "logging": {
+      "run_dir": "runs"
+    }
+  },
+  "environment": {
+    "git_commit": "cf51b3fee9260dd4329f2d335955d8a313a6d5fa",
+    "git_dirty": false,
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+    "seed": 42,
+    "dataset_fingerprint": "37d2583c2027810698efffe1041ff4da519450dc2b7e003e80801caba1dd6618",
+    "timestamp": "2026-10-02T21:36:09.267023+00:00"
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "duration_sec": 4.356639308999995,
+      "examples": 5495,
+      "examples_per_sec": 1261.29295722686,
+      "batch_size": 64
+    },
+    {
+      "epoch": 2,
+      "duration_sec": 0.6505836449999975,
+      "examples": 896,
+      "examples_per_sec": 1377.2210479192809,
+      "batch_size": 64
+    }
+  ],
+  "last_metrics": {
+    "epoch": "2",
+    "step": "100",
+    "policy_loss": "2.8681745529174805",
+    "value_loss": "0.4831484854221344",
+    "loss": "3.351323127746582",
+    "entropy": "3.0249757766723633",
+    "learning_rate": "0.00045702882373436317",
+    "vram_mb": "112",
+    "gpu_util_pct": "43",
+    "examples_per_sec": "990.3103547547594",
+    "batch_size": "64",
+    "microbatch_size": "64",
+    "epoch_elapsed_sec": "0.6493305559999953"
+  }
+}

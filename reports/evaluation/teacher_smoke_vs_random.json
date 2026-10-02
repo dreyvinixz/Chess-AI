@@ -1,0 +1,35 @@
+{
+  "opponent": "random",
+  "games": 2,
+  "search": "policy",
+  "simulations": 16,
+  "seed": 42,
+  "results": {
+    "W": 0,
+    "D": 1,
+    "L": 0,
+    "U": 1
+  },
+  "completed_games": 1,
+  "score": 0.5,
+  "details": [
+    {
+      "game": 1,
+      "color": "white",
+      "result": "D",
+      "plies": 13,
+      "pgn_result": "1/2-1/2",
+      "termination": "THREEFOLD_REPETITION"
+    },
+    {
+      "game": 2,
+      "color": "black",
+      "result": "U",
+      "plies": 300,
+      "pgn_result": "*",
+      "termination": "PLY_CAP"
+    }
+  ],
+  "timestamp": "2026-10-02T21:29:06.663773+00:00",
+  "checkpoint": "runs/teacher-sprint2/inference.pt"
+}

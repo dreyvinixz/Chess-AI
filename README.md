@@ -59,12 +59,27 @@ chess-ai train --dataset data/processed/sample/train.jsonl --config configs/debu
 chess-ai play --checkpoint runs/demo/checkpoint.pt
 ```
 
-For a real experiment, use a larger PGN, `configs/gtx1650.yaml`, and a held-out validation set. To generate teacher labels, install Stockfish as a separate UCI executable and run:
+For a bounded public-data experiment (17.8 MB download, 100 accepted games, 100 training steps):
 
 ```bash
+python scripts/download_lichess.py --month 2013-01
+chess-ai prepare-data data/raw/lichess_db_standard_rated_2013-01.pgn.zst --output data/processed/lichess-2013-01-100 --min-elo 2000 --max-games 100
+chess-ai train --dataset data/processed/lichess-2013-01-100/train.jsonl --config configs/gtx1650.yaml --max-steps 100 --run-dir runs/lichess-supervised-100
+```
+
+For a real experiment, use a larger PGN and evaluate on the held-out validation/test splits. To generate teacher labels, download a verified local Stockfish 19 executable, then run:
+
+```bash
+python scripts/download_stockfish.py
 chess-ai label-data data/processed/sample/train.jsonl --output data/processed/teacher.jsonl --engine stockfish --depth 8 --multipv 3
 chess-ai train --dataset data/processed/teacher.jsonl --config configs/gtx1650.yaml --run-dir runs/teacher-001
 ```
+
+Add `--limit 500 --sample-seed 42` to `label-data` to sample positions across a larger input file within a bounded teacher budget.
+
+To start distillation from a supervised checkpoint with a new teacher dataset, use `--init-checkpoint runs/lichess-supervised-100/inference.pt`. `--resume` continues the **same** dataset and optimizer state; the two options serve different purposes.
+
+The downloader checks the official release SHA-256 and stores its archive and executable under ignored `tools/stockfish-local/`. It never commits or redistributes them.
 
 ## Evaluation and benchmarks
 
