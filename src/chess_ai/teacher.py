@@ -38,8 +38,7 @@ def teacher_targets(infos: list[dict], board: chess.Board, temperature_cp: float
     weights = [math.exp((item["cp"] - maximum) / temperature_cp) for item in candidates]
     total = sum(weights)
     policy = {
-        item["move"]: weight / total
-        for item, weight in zip(candidates, weights, strict=True)
+        item["move"]: weight / total for item, weight in zip(candidates, weights, strict=True)
     }
     value = math.tanh(candidates[0]["cp"] / 600)
     return {"policy": policy, "value": value, "teacher": candidates}

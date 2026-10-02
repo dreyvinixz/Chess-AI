@@ -128,9 +128,20 @@ def benchmark(
         policy_only(model, board, device)
     if device.type == "cuda":
         torch.cuda.synchronize()
+    from datetime import datetime, timezone
+
+    from chess_ai.training import git_commit, git_dirty
+
     report = {
         "parameters": sum(p.numel() for p in model.parameters()),
         "checkpoint_bytes": checkpoint.stat().st_size,
+        "checkpoint": str(checkpoint),
+        "git_commit": git_commit(),
+        "git_dirty": git_dirty(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "torch": torch.__version__,
+        "cuda_runtime": torch.version.cuda,
+        "gpu": torch.cuda.get_device_name() if device.type == "cuda" else None,
         "device": str(device),
         "inference_ms": 1000 * (perf_counter() - started) / iterations,
         "peak_vram_mb": round(torch.cuda.max_memory_allocated() / 1048576, 1)
@@ -139,6 +150,19 @@ def benchmark(
         "iterations": iterations,
     }
     save_report(report, output)
+    summary = (
+        "# Model summary\n\n"
+        f"Checkpoint: `{checkpoint}`  \n"
+        f"Git commit: `{report['git_commit']}`  \n"
+        f"Device: {report['gpu'] or 'CPU'}  \n"
+        f"Parameters: {report['parameters']:,}  \n"
+        f"Checkpoint size: {report['checkpoint_bytes'] / 1048576:.1f} MiB  \n"
+        f"Policy inference: {report['inference_ms']:.2f} ms/position "
+        f"over {iterations} iterations  \n"
+        f"Peak allocated VRAM: {report['peak_vram_mb']} MiB\n\n"
+        "This benchmark measures speed and memory, not playing strength.\n"
+    )
+    (output.parent / "model_summary.md").write_text(summary, encoding="utf-8")
     console.print_json(data=report)
 
 

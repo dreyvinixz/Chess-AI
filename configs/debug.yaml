@@ -1,5 +1,5 @@
 seed: 42
-model: {channels: 16, blocks: 1}
+model: {channels: 16, blocks: 1, policy_channels: 2}
 training: {batch_size: 4, epochs: 1, learning_rate: 0.001, accumulation_steps: 1, max_steps: 2, amp: false, workers: 0, value_weight: 1.0}
 search: {simulations: 4, c_puct: 1.5}
 hardware: {max_vram_mb: 3500}

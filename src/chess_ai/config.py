@@ -25,7 +25,11 @@ def load_config(path: Path) -> dict[str, Any]:
     missing = required - config.keys()
     if missing:
         raise ValueError(f"Missing config sections: {', '.join(sorted(missing))}")
-    if config["model"]["channels"] <= 0 or config["model"]["blocks"] < 0:
+    if (
+        config["model"]["channels"] <= 0
+        or config["model"]["blocks"] < 0
+        or config["model"].get("policy_channels", 2) <= 0
+    ):
         raise ValueError("Invalid model dimensions")
     if config["training"]["batch_size"] <= 0:
         raise ValueError("batch_size must be positive")

@@ -52,9 +52,12 @@ def system_report() -> dict:
 
 def _has_playwright() -> bool:
     try:
-        import playwright  # noqa: F401
+        from pathlib import Path
 
-        return True
+        from playwright.sync_api import sync_playwright
+
+        with sync_playwright() as playwright:
+            return Path(playwright.chromium.executable_path).exists()
     except ImportError:
         return False
 

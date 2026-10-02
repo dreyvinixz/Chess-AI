@@ -2,6 +2,7 @@ seed: 42
 model:
   channels: 32
   blocks: 2
+  policy_channels: 2
 training:
   batch_size: 16
   epochs: 1

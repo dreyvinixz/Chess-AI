@@ -62,6 +62,16 @@ def git_commit() -> str:
     return result.stdout.strip() if result.returncode == 0 else "uncommitted"
 
 
+def git_dirty() -> bool:
+    result = subprocess.run(
+        ["git", "status", "--porcelain", "--", "src", "configs", "pyproject.toml"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return bool(result.stdout.strip()) if result.returncode == 0 else True
+
+
 def save_checkpoint(
     path: Path,
     model: PolicyValueNet,
@@ -82,6 +92,7 @@ def save_checkpoint(
             "global_step": step,
             "dataset_fingerprint": fingerprint,
             "git_commit": git_commit(),
+            "git_dirty": git_dirty(),
             "metrics": metrics,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         },
@@ -121,6 +132,7 @@ def train(config: dict, dataset_path: Path, run_dir: Path, resume: Path | None =
         json.dumps(
             {
                 "git_commit": git_commit(),
+                "git_dirty": git_dirty(),
                 "python": platform.python_version(),
                 "torch": torch.__version__,
                 "cuda": torch.version.cuda,
