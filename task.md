@@ -7,13 +7,13 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - [x] Inspect destination Git state, FrameBridge presentation, WSL2, Python, and GPU.
 - [x] Research official WSL CUDA, PyTorch, Lichess data, and GPL dependency sources.
 - [ ] Record measured architecture proof of concept in `docs/MODEL_DESIGN.md`.
-- [ ] Create GitHub issues for the remaining sprint deliverables.
+- [x] Create GitHub issues #1 through #6 for the sprint deliverables.
 
 ## Sprint 1 — Local vertical slice
 
-- [ ] Package and configure the CLI.
-- [ ] Encode positions and every legal move, including special moves.
-- [ ] Run the compact network, mask legal moves, apply a move.
+- [x] Package and configure the CLI.
+- [x] Encode positions and every legal move, including special moves.
+- [x] Run the compact network, mask legal moves, apply a move.
 - [ ] Run CUDA doctor and smoke test on WSL2 GTX 1650.
 - [ ] Verify CI on CPU.
 
@@ -54,5 +54,6 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 
 - Destination repository began empty on `main` (`origin/main` absent).
 - WSL2 Ubuntu 26.04 sees NVIDIA GeForce GTX 1650, 4096 MiB via `nvidia-smi`.
-- Python 3.12 and PyTorch 2.6.0 CUDA 12.4 wheel were installed in the repository `.venv`; CUDA execution still needs verification.
+- Python 3.12.13 and PyTorch 2.6.0+cu124 run in the repository `.venv`; `chess-ai doctor` confirms CUDA on GTX 1650, 4096 MiB, compute capability 7.5, and an FP16 matrix operation.
+- `pytest -q`: 12 passed. `ruff check src tests`: passed.
 - No Chess.com bot results have been measured.
