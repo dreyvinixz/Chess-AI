@@ -128,17 +128,26 @@ def _student(checkpoint: Path) -> tuple[PolicyValueNet, torch.device]:
 @app.command()
 def evaluate(
     checkpoint: Path = typer.Option(..., exists=True),
-    opponent: str = typer.Option("random", help="random or greedy"),
+    opponent: str = typer.Option("random", help="random, greedy, or stockfish"),
     games: int = typer.Option(2, min=1),
     search: str = typer.Option("policy", help="policy or puct"),
     simulations: int = typer.Option(16),
+    engine: str = typer.Option("stockfish", help="UCI executable for Stockfish baseline."),
+    engine_depth: int = typer.Option(4, min=0),
+    engine_nodes: int = typer.Option(0, min=0),
+    engine_time_sec: float = typer.Option(0.0, min=0),
+    engine_elo: int | None = typer.Option(None, help="Optional UCI_LimitStrength Elo."),
     output: Path = typer.Option(Path("reports/evaluation/latest.json")),
 ) -> None:
     """Play local games against a baseline and save honest W/D/L results."""
-    if opponent not in {"random", "greedy"} or search not in {"policy", "puct"}:
-        raise typer.BadParameter("Use opponent=random|greedy and search=policy|puct")
+    if opponent not in {"random", "greedy", "stockfish"} or search not in {"policy", "puct"}:
+        raise typer.BadParameter("Use opponent=random|greedy|stockfish and search=policy|puct")
     model, device = _student(checkpoint)
-    report = play_match(model, device, opponent, games, search, simulations)
+    report = play_match(
+        model, device, opponent, games, search, simulations,
+        engine_path=engine, engine_depth=engine_depth, engine_nodes=engine_nodes,
+        engine_time_sec=engine_time_sec, engine_elo=engine_elo,
+    )
     report["checkpoint"] = str(checkpoint)
     save_report(report, output)
     console.print_json(data=report)

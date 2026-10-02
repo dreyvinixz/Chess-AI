@@ -2,7 +2,6 @@
 
 import json
 import math
-import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -10,6 +9,7 @@ import chess
 import chess.engine
 
 from chess_ai.data import records, reservoir_sample, sha256_file
+from chess_ai.engines import resolve_stockfish
 
 
 def score_cp(score: chess.engine.PovScore, turn: chess.Color, mate_cp: int = 10000) -> int:
@@ -72,16 +72,7 @@ def label_positions(
 ) -> int:
     if sample_seed is not None and limit <= 0:
         raise ValueError("A positive --limit is required with --sample-seed")
-    local_engine = Path.cwd() / "tools" / "stockfish-local" / "stockfish"
-    if engine_path == "stockfish" and local_engine.is_file():
-        engine_path = str(local_engine)
-    executable = shutil.which(engine_path) or (
-        str(Path(engine_path)) if Path(engine_path).is_file() else None
-    )
-    if executable is None:
-        raise FileNotFoundError(
-            "Stockfish not found. Run python scripts/download_stockfish.py or pass --engine PATH"
-        )
+    executable = resolve_stockfish(engine_path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     count = 0
     with (
