@@ -48,7 +48,7 @@ def play_match(
     max_plies: int = 300,
 ) -> dict:
     rng = random.Random(seed)
-    results = {"W": 0, "D": 0, "L": 0}
+    results = {"W": 0, "D": 0, "L": 0, "U": 0}
     details = []
     for game_number in range(games):
         board = chess.Board()
@@ -66,8 +66,10 @@ def play_match(
             board.push(move)
         outcome = board.outcome(claim_draw=True)
         result = (
-            "D"
-            if outcome is None or outcome.winner is None
+            "U"
+            if outcome is None
+            else "D"
+            if outcome.winner is None
             else "W"
             if outcome.winner == student_color
             else "L"
@@ -80,8 +82,10 @@ def play_match(
                 "result": result,
                 "plies": board.ply(),
                 "pgn_result": board.result(claim_draw=True),
+                "termination": outcome.termination.name if outcome else "PLY_CAP",
             }
         )
+    completed = results["W"] + results["D"] + results["L"]
     return {
         "opponent": opponent,
         "games": games,
@@ -89,7 +93,8 @@ def play_match(
         "simulations": simulations,
         "seed": seed,
         "results": results,
-        "score": (results["W"] + 0.5 * results["D"]) / games,
+        "completed_games": completed,
+        "score": (results["W"] + 0.5 * results["D"]) / completed if completed else None,
         "details": details,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
