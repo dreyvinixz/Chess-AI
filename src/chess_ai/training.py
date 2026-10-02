@@ -62,7 +62,14 @@ class PositionDataset(Dataset):
             for uci, probability in row["policy"].items():
                 move = chess.Move.from_uci(uci)
                 if move in board.legal_moves:
-                    target[action_index(move)] = float(probability)
+                    weight = float(probability)
+                    if not np.isfinite(weight) or weight < 0:
+                        raise ValueError(f"Invalid policy weight at row {index}")
+                    target[action_index(move)] = weight
+            total = float(target.sum())
+            if total <= 0:
+                raise ValueError(f"Policy has no legal positive weight at row {index}")
+            target /= total
         else:
             move = chess.Move.from_uci(row["move"])
             if move not in board.legal_moves:

@@ -90,7 +90,7 @@ def play_match(
         "opponent": opponent,
         "games": games,
         "search": search,
-        "simulations": simulations,
+        "simulations": simulations if search == "puct" else 0,
         "seed": seed,
         "results": results,
         "completed_games": completed,

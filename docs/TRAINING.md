@@ -23,3 +23,12 @@ chess-ai train --dataset data/processed/lichess-2013-01-100/teacher-256.jsonl --
 ```
 
 `--init-checkpoint` copies model weights and starts a fresh optimizer and dataset fingerprint. `--resume` restores optimizer, scheduler, scaler, epoch, and global step for the same dataset; it rejects a changed dataset hash or model shape. The teacher target uses a centipawn temperature softmax over legal MultiPV moves, with mate distance mapped through `mate_score=10000`. Value uses Stockfish UCI WDL from the side to move when available, otherwise `tanh(cp/600)`. The original PGN game outcome is retained separately in teacher-labeled rows.
+
+After supervised training, optional student-only self-play produces a dataset with PUCT root visit targets and final outcomes from the side to move:
+
+```bash
+chess-ai self-play --checkpoint runs/lichess-distill-256/inference.pt --games 2 --search puct --simulations 16 --output data/processed/self-play.jsonl
+chess-ai train --dataset data/processed/self-play.jsonl --config configs/gtx1650.yaml --init-checkpoint runs/lichess-distill-256/inference.pt --run-dir runs/self-play-1
+```
+
+Self-play stores only completed games. Games still running at `--max-plies` are marked `U` and omitted from training rather than labeled draws. The adjacent manifest includes checkpoint and output hashes, search settings, seed, game results, node/inference totals, and elapsed time. PUCT root noise is used only for self-play. Set `--noise-alpha 0` to disable it. Self-play on a weak checkpoint can reinforce errors, so compare the new checkpoint on held-out data and local matches before adopting it.

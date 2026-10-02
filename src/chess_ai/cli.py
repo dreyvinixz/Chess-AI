@@ -18,9 +18,11 @@ from chess_ai.doctor import write_report
 from chess_ai.evaluation import play_match, save_report
 from chess_ai.model import PolicyValueNet
 from chess_ai.search import policy_only, puct
+from chess_ai.self_play import generate_self_play
 from chess_ai.teacher import label_positions
 from chess_ai.training import load_model
 from chess_ai.training import train as train_model
+from chess_ai.validation import validate_dataset
 
 app = typer.Typer(
     help="Train, inspect, and play with a compact chess student.", no_args_is_help=True
@@ -139,6 +141,44 @@ def evaluate(
     report = play_match(model, device, opponent, games, search, simulations)
     report["checkpoint"] = str(checkpoint)
     save_report(report, output)
+    console.print_json(data=report)
+
+
+@app.command()
+def validate(
+    checkpoint: Path = typer.Option(..., exists=True),
+    dataset: Path = typer.Option(..., exists=True, help="Held-out prepared JSONL."),
+    batch_size: int = typer.Option(32, min=1),
+    output: Path = typer.Option(Path("reports/evaluation/validation.json")),
+) -> None:
+    """Measure policy agreement and value error on a held-out dataset."""
+    model, device = _student(checkpoint)
+    report = validate_dataset(model, device, dataset, checkpoint, batch_size)
+    save_report(report, output)
+    console.print_json(data=report)
+
+
+@app.command("self-play")
+def self_play(
+    checkpoint: Path = typer.Option(..., exists=True),
+    output: Path = typer.Option(Path("data/processed/self-play.jsonl")),
+    games: int = typer.Option(1, min=1),
+    search: str = typer.Option("puct", help="puct or policy"),
+    simulations: int = typer.Option(16, min=1),
+    max_plies: int = typer.Option(300, min=1),
+    temperature: float = typer.Option(1.0, min=0),
+    temperature_plies: int = typer.Option(20, min=0),
+    noise_alpha: float | None = typer.Option(0.3, help="PUCT root noise; set to 0 to disable."),
+    seed: int = typer.Option(42),
+) -> None:
+    """Create student-only self-play examples from completed local games."""
+    if noise_alpha == 0:
+        noise_alpha = None
+    model, device = _student(checkpoint)
+    report = generate_self_play(
+        model, device, checkpoint, output, games, search, simulations, max_plies,
+        temperature, temperature_plies, noise_alpha, seed,
+    )
     console.print_json(data=report)
 
 

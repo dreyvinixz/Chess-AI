@@ -1,5 +1,6 @@
 """Student-only move selection and compact PUCT search."""
 
+import random
 from dataclasses import dataclass
 from time import perf_counter
 
@@ -19,6 +20,7 @@ class SearchResult:
     inferences: int
     elapsed: float
     candidates: list[tuple[str, float]]
+    policy: dict[str, float]
 
 
 def infer(
@@ -47,6 +49,7 @@ def policy_only(model: PolicyValueNet, board: chess.Board, device: torch.device)
         1,
         perf_counter() - start,
         [(m.uci(), p) for m, p in sorted(priors.items(), key=lambda item: -item[1])[:5]],
+        {move.uci(): probability for move, probability in priors.items()},
     )
 
 
@@ -68,16 +71,30 @@ def puct(
     device: torch.device,
     simulations: int = 32,
     c_puct: float = 1.5,
+    root_noise_alpha: float | None = None,
+    root_noise_fraction: float = 0.25,
+    rng: random.Random | None = None,
 ) -> SearchResult:
     if board.is_game_over():
         raise ValueError("Cannot search terminal position")
     start = perf_counter()
     root = Node()
     priors, root_value = infer(model, board, device)
+    if root_noise_alpha is not None:
+        if root_noise_alpha <= 0 or not 0 <= root_noise_fraction <= 1:
+            raise ValueError("Invalid root noise parameters")
+        noise_rng = rng or random.Random()
+        noise = [noise_rng.gammavariate(root_noise_alpha, 1.0) for _ in priors]
+        noise_total = sum(noise)
+        priors = {
+            move: (1 - root_noise_fraction) * prior
+            + root_noise_fraction * sample / noise_total
+            for (move, prior), sample in zip(priors.items(), noise, strict=True)
+        }
     root.children = {move: Node(prior) for move, prior in priors.items()}
     inferences = 1
     for _ in range(simulations):
-        position = board.copy(stack=False)
+        position = board.copy()
         node = root
         path = [node]
         while node.children:
@@ -112,6 +129,8 @@ def puct(
         ((m.uci(), child.visits / total) for m, child in root.children.items()),
         key=lambda item: -item[1],
     )[:5]
+    visit_policy = {move.uci(): child.visits / total for move, child in root.children.items()}
     return SearchResult(
-        move, root_value, simulations, inferences, perf_counter() - start, candidates
+        move, root_value, simulations, inferences, perf_counter() - start, candidates,
+        visit_policy,
     )
