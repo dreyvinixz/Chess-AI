@@ -29,7 +29,8 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - [x] Compare policy-only and PUCT against the greedy baseline using the same checkpoint.
 - [x] Add local terminal play and optional self-play with complete-game targets.
 - [x] Measure held-out validation and self-play speed without invented strength claims.
-- [ ] Add limited Stockfish baseline and broader match sample before making strength claims.
+- [x] Add explicit depth-limited Stockfish 19 opponent; both policy and PUCT lost 0W/0D/2L.
+- [ ] Broaden match samples before making strength claims.
 
 ## Sprint 4 — Human experience
 

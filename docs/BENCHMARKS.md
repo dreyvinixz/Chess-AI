@@ -11,7 +11,7 @@ The measured debug-profile sizing run on a GTX 1650 Max-Q, PyTorch 2.6.0+cu124, 
 | GTX 1650 training, 20 distillation steps | 135 MiB peak allocated VRAM; 256 positions, five epochs |
 | Student vs random, policy-only, 10 attempted games | 2W / 7D / 0L / 1 unfinished; 61.1% over 9 completed |
 | Student vs greedy, policy-only, 10 attempted games | 0W / 8D / 1L / 1 unfinished; 44.4% over 9 completed |
-| Student score vs Stockfish | Not measured |
+| Distilled student vs Stockfish 19, depth 4 | Policy: 0W/0D/2L; PUCT16: 0W/0D/2L |
 | Chess.com bot ladder | Not measured |
 
 The game results use the **supervised** checkpoint after 100 steps, before teacher distillation. The public sample contains 100 rated Lichess games from January 2013, filtered to both players at least 2000 and deduplicated by board state. Ten attempted baseline games per opponent are too few for an Elo estimate. Unfinished games at 300 plies are excluded from match score. Training throughput on this small dataset is not a sustained large-dataset benchmark. The JSON reports contain exact run metadata and per-game outcomes.
@@ -29,5 +29,7 @@ The same 728-position validation split was used for each row. Lower cross entrop
 The 20-step teacher run reduced value error on this split but slightly worsened imitation of PGN moves. Fine-tuning on one self-play game markedly worsened value error, so this proof checkpoint should **not** replace the teacher checkpoint. Reports contain exact SHA-256 hashes under `reports/evaluation/`.
 
 Using the distillation checkpoint against the greedy material baseline, policy-only and 16-simulation PUCT each scored four draws in four games, with zero wins. This tiny sample shows no strength advantage from PUCT. The two modes played different game trajectories. `reports/evaluation/distill_policy_vs_greedy.json` and `distill_puct16_vs_greedy.json` record each termination.
+
+Against Stockfish 19 with a depth-four limit, the same checkpoint lost both games with policy-only selection and both games with 16-simulation PUCT. Stockfish was the opponent on its own turns and supplied no runtime assistance to the student. These four games are a baseline check and do not determine a calibrated rating. Exact limits, engine binary hash, colors, and checkmate terminations are in `reports/evaluation/distill_policy_vs_stockfish_d4.json` and `distill_puct16_vs_stockfish_d4.json`.
 
 A single policy-only self-play game ended in threefold repetition after 46 plies. A single 16-simulation PUCT game ended in checkmate after 160 plies and took 5.68 seconds for 2,560 simulations and 2,695 model inferences on the GTX 1650 Max-Q. The saved PUCT game supplied 160 training positions. These are pipeline and speed observations, not strength evidence. The 5-step training run used 134 MiB peak allocated VRAM and recorded `git_dirty=true` because the implementation was still being edited during the proof. See `reports/self_play/` and `reports/training/self-play-puct-proof.json`.

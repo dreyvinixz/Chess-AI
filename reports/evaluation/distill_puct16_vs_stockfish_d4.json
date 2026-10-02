@@ -1,0 +1,47 @@
+{
+  "opponent": "stockfish",
+  "games": 2,
+  "search": "puct",
+  "simulations": 16,
+  "seed": 42,
+  "results": {
+    "W": 0,
+    "D": 0,
+    "L": 2,
+    "U": 0
+  },
+  "completed_games": 2,
+  "score": 0.0,
+  "external_engine_opponent": {
+    "engine": {
+      "name": "Stockfish 19",
+      "author": "the Stockfish developers (see AUTHORS file)"
+    },
+    "engine_sha256": "0f83d24cc46d2c66c60f16001af5444873bc112b7d028594513426894c12da19",
+    "depth": 4,
+    "nodes": null,
+    "time_sec": null,
+    "elo": null
+  },
+  "stockfish_runtime_assistance_for_student": false,
+  "details": [
+    {
+      "game": 1,
+      "color": "white",
+      "result": "L",
+      "plies": 24,
+      "pgn_result": "0-1",
+      "termination": "CHECKMATE"
+    },
+    {
+      "game": 2,
+      "color": "black",
+      "result": "L",
+      "plies": 21,
+      "pgn_result": "1-0",
+      "termination": "CHECKMATE"
+    }
+  ],
+  "timestamp": "2026-10-02T22:02:07.520838+00:00",
+  "checkpoint": "runs/lichess-distill-256/inference.pt"
+}
