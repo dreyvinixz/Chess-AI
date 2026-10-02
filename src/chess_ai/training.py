@@ -197,7 +197,15 @@ def gpu_utilization() -> int | None:
         return None
 
 
-def train(config: dict, dataset_path: Path, run_dir: Path, resume: Path | None = None) -> Path:
+def train(
+    config: dict,
+    dataset_path: Path,
+    run_dir: Path,
+    resume: Path | None = None,
+    init_checkpoint: Path | None = None,
+) -> Path:
+    if resume and init_checkpoint:
+        raise ValueError("Use either resume or init_checkpoint, not both")
     random.seed(config["seed"])
     np.random.seed(config["seed"])
     torch.manual_seed(config["seed"])
@@ -214,6 +222,19 @@ def train(config: dict, dataset_path: Path, run_dir: Path, resume: Path | None =
     use_amp = device.type == "cuda" and config["training"]["amp"]
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
     fingerprint = file_sha256(dataset_path)
+    if init_checkpoint:
+        initialized, source = load_model(init_checkpoint, device)
+        if source["config"]["model"] != config["model"]:
+            raise ValueError("Initialization model configuration differs from the target")
+        model.load_state_dict(initialized.state_dict())
+        config = {
+            **config,
+            "initialization": {
+                "checkpoint": str(init_checkpoint),
+                "sha256": file_sha256(init_checkpoint),
+                "git_commit": source.get("git_commit"),
+            },
+        }
     start_epoch = 0
     step = 0
     if resume:
@@ -222,6 +243,8 @@ def train(config: dict, dataset_path: Path, run_dir: Path, resume: Path | None =
             raise ValueError("Resume dataset fingerprint differs from the checkpoint")
         if saved["config"]["model"] != config["model"]:
             raise ValueError("Resume model configuration differs from the checkpoint")
+        if saved["config"].get("initialization"):
+            config = {**config, "initialization": saved["config"]["initialization"]}
         model.load_state_dict(saved["model"])
         optimizer.load_state_dict(saved["optimizer"])
         if saved.get("scheduler"):
@@ -247,6 +270,7 @@ def train(config: dict, dataset_path: Path, run_dir: Path, resume: Path | None =
                 "gpu": torch.cuda.get_device_name() if torch.cuda.is_available() else None,
                 "seed": config["seed"],
                 "dataset_fingerprint": fingerprint,
+                "initialization": config.get("initialization"),
                 "timestamp": datetime.now(timezone.utc).isoformat(),
             },
             indent=2,

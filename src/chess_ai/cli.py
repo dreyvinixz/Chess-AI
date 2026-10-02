@@ -85,6 +85,9 @@ def train(
     config: Path = typer.Option(Path("configs/gtx1650.yaml"), exists=True),
     run_dir: Path = typer.Option(Path("runs/latest")),
     resume: Path | None = typer.Option(None, exists=True),
+    init_checkpoint: Path | None = typer.Option(
+        None, exists=True, help="Warm-start from model weights with fresh optimizer state."
+    ),
     max_steps: int | None = typer.Option(None, min=1, help="Override training.max_steps."),
     report_dir: Path = typer.Option(Path("reports/training"), help="Local JSON summary directory."),
 ) -> None:
@@ -92,7 +95,7 @@ def train(
     experiment = load_config(config)
     if max_steps is not None:
         experiment["training"]["max_steps"] = max_steps
-    checkpoint = train_model(experiment, dataset, run_dir, resume)
+    checkpoint = train_model(experiment, dataset, run_dir, resume, init_checkpoint)
     environment = json.loads((run_dir / "environment.json").read_text(encoding="utf-8"))
     epochs = [
         json.loads(line)
@@ -194,7 +197,12 @@ def benchmark(
         f"Peak allocated VRAM: {report['peak_vram_mb']} MiB\n\n"
         "This benchmark measures speed and memory, not playing strength.\n"
     )
-    (output.parent / "model_summary.md").write_text(summary, encoding="utf-8")
+    summary_path = (
+        output.parent / "model_summary.md"
+        if output.name == "benchmark.json"
+        else output.with_suffix(".md")
+    )
+    summary_path.write_text(summary, encoding="utf-8")
     console.print_json(data=report)
 
 
