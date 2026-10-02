@@ -4,7 +4,7 @@ The supported path is Windows → WSL2 Ubuntu → Python virtual environment →
 
 1. In Windows PowerShell, run `wsl --install` if needed, then `wsl --update` and `wsl -l -v`. Confirm Ubuntu is version 2.
 2. Enter Ubuntu with `wsl`. Run `nvidia-smi` and confirm the GTX 1650 is listed. The CUDA version shown by `nvidia-smi` is the driver's supported version, not necessarily PyTorch's bundled runtime.
-3. Install Python 3.12, its `venv` support, and Git using your Ubuntu distribution's supported packages or a trusted Python installer. The current test environment is Ubuntu 26.04 with Python 3.12.13.
+3. Install Git and Python 3.12 with `venv` support. On Ubuntu 24.04, `sudo apt update && sudo apt install git python3.12 python3.12-venv` provides these packages. On Ubuntu 26.04, the system default Python may be newer; install Python 3.12 separately or use [uv's official installation instructions](https://docs.astral.sh/uv/getting-started/installation/). The setup script detects `uv` and provisions Python 3.12 into this repository when needed. The current test environment is Ubuntu 26.04 with Python 3.12.13.
 4. Clone this repository and run `bash scripts/setup_wsl.sh`. Activate with `source .venv/bin/activate`.
 5. Run `chess-ai doctor` and `chess-ai smoke-test`.
 

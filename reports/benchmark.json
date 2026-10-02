@@ -1,0 +1,15 @@
+{
+  "parameters": 2665831,
+  "checkpoint_bytes": 32017506,
+  "checkpoint": "runs/compact-final/checkpoint.pt",
+  "git_commit": "2b89cb6d2d51c7688151b79e074e80bcd5ee7d93",
+  "git_dirty": false,
+  "timestamp": "2026-10-02T21:05:10.831190+00:00",
+  "torch": "2.6.0+cu124",
+  "cuda_runtime": "12.4",
+  "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+  "device": "cuda",
+  "inference_ms": 2.19125498000011,
+  "peak_vram_mb": 19.4,
+  "iterations": 100
+}

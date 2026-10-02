@@ -1,0 +1,8 @@
+{
+  "parameters": 21016149,
+  "checkpoint_bytes": 252221346,
+  "device": "cuda",
+  "inference_ms": 1.475416299999921,
+  "peak_vram_mb": 89.4,
+  "iterations": 10
+}

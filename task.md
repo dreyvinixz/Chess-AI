@@ -14,7 +14,7 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - [x] Package and configure the CLI.
 - [x] Encode positions and every legal move, including special moves.
 - [x] Run the compact network, mask legal moves, apply a move.
-- [ ] Run CUDA doctor and smoke test on WSL2 GTX 1650.
+- [x] Run CUDA doctor and smoke test on WSL2 GTX 1650.
 - [ ] Verify CI on CPU.
 
 ## Sprint 2 — Data and training
@@ -56,4 +56,6 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - WSL2 Ubuntu 26.04 sees NVIDIA GeForce GTX 1650, 4096 MiB via `nvidia-smi`.
 - Python 3.12.13 and PyTorch 2.6.0+cu124 run in the repository `.venv`; `chess-ai doctor` confirms CUDA on GTX 1650, 4096 MiB, compute capability 7.5, and an FP16 matrix operation.
 - `pytest -q`: 12 passed. `ruff check src tests`: passed.
+- `CUDA_VISIBLE_DEVICES="" pytest -q`: 12 passed. CUDA smoke test passed. The final debug checkpoint recorded Git commit `2b89cb6`, `git_dirty=false`, and the 14-position dataset SHA-256.
+- `python -m build`: source distribution and wheel built. The policy projection was reduced from 21,016,149 to 2,665,831 parameters after profiling; see `reports/`.
 - No Chess.com bot results have been measured.
