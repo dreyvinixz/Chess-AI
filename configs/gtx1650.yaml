@@ -1,0 +1,29 @@
+seed: 42
+model:
+  channels: 64
+  blocks: 4
+training:
+  batch_size: 64
+  epochs: 5
+  learning_rate: 0.0005
+  accumulation_steps: 2
+  max_steps: 0
+  amp: true
+  workers: 2
+  value_weight: 1.0
+search:
+  simulations: 64
+  c_puct: 1.5
+hardware:
+  max_vram_mb: 3500
+dataset:
+  min_elo: 2000
+  split_seed: 42
+teacher:
+  depth: 12
+  multipv: 5
+  temperature_cp: 100
+self_play:
+  games: 4
+logging:
+  run_dir: runs

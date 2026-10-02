@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chess-ai"
+version = "0.1.0"
+description = "Compact CUDA chess student with offline Stockfish teaching"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
+dependencies = ["python-chess>=1.999", "numpy>=1.26", "torch>=2.5", "PyYAML>=6", "typer>=0.12", "rich>=13"]
+
+[project.optional-dependencies]
+browser = ["playwright>=1.50"]
+train = ["tensorboard>=2.18"]
+dev = ["pytest>=8", "ruff>=0.9", "mypy>=1.15", "build>=1.2"]
+
+[project.scripts]
+chess-ai = "chess_ai.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["cuda: requires NVIDIA CUDA"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["B008"] # Typer uses Option and Argument as callable defaults.
