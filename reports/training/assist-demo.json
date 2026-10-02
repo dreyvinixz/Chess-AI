@@ -1,0 +1,89 @@
+{
+  "run_dir": "runs/assist-demo",
+  "checkpoint": "runs/assist-demo/checkpoint.pt",
+  "config": {
+    "seed": 42,
+    "model": {
+      "channels": 64,
+      "blocks": 4,
+      "policy_channels": 2
+    },
+    "training": {
+      "batch_size": 64,
+      "epochs": 5,
+      "learning_rate": 0.0005,
+      "accumulation_steps": 2,
+      "max_steps": 1,
+      "amp": true,
+      "workers": 2,
+      "value_weight": 1.0
+    },
+    "search": {
+      "simulations": 64,
+      "c_puct": 1.5
+    },
+    "hardware": {
+      "max_vram_mb": 3500
+    },
+    "dataset": {
+      "min_elo": 2000,
+      "split_seed": 42
+    },
+    "teacher": {
+      "depth": 12,
+      "multipv": 5,
+      "temperature_cp": 100
+    },
+    "self_play": {
+      "games": 4
+    },
+    "logging": {
+      "run_dir": "runs"
+    },
+    "initialization": {
+      "checkpoint": "runs/lichess-distill-256/inference.pt",
+      "sha256": "be2600e8b3e1b612558ceeaae203faa6386c71e79d411ab80e8005d8fa0f897b",
+      "git_commit": "663e3ef606c0ce125e5e19fee06763e1205e5cf4"
+    }
+  },
+  "environment": {
+    "git_commit": "fbb893a99e1f10bd5a8d3a5e8b8780041f5ada46",
+    "git_dirty": true,
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1650 with Max-Q Design",
+    "seed": 42,
+    "dataset_fingerprint": "16d47c1091d7b0f9624dd443764f7c21ddd37a9ac86859d02b39adbfb030e043",
+    "initialization": {
+      "checkpoint": "runs/lichess-distill-256/inference.pt",
+      "sha256": "be2600e8b3e1b612558ceeaae203faa6386c71e79d411ab80e8005d8fa0f897b",
+      "git_commit": "663e3ef606c0ce125e5e19fee06763e1205e5cf4"
+    },
+    "timestamp": "2026-10-02T22:11:25.552871+00:00"
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "duration_sec": 0.5468380009999976,
+      "examples": 2,
+      "examples_per_sec": 3.6573816177026552,
+      "batch_size": 64
+    }
+  ],
+  "last_metrics": {
+    "epoch": "1",
+    "step": "1",
+    "policy_loss": "0.8472452163696289",
+    "value_loss": "0.024033058434724808",
+    "loss": "0.8712782859802246",
+    "entropy": "2.549865245819092",
+    "learning_rate": "0.0005",
+    "vram_mb": "85",
+    "gpu_util_pct": "",
+    "examples_per_sec": "6.648966740428905",
+    "batch_size": "2",
+    "microbatch_size": "2",
+    "epoch_elapsed_sec": "0.3622468989999845"
+  }
+}

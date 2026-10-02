@@ -34,9 +34,10 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 
 ## Sprint 4 — Human experience
 
-- [ ] Store observed games in SQLite.
-- [ ] Annotate human moves after the game and weight fine-tuning examples.
-- [ ] Implement assist mode with local suggestions and move capture.
+- [x] Store local assisted games and actual moves in SQLite.
+- [x] Annotate completed games offline and weight human policy targets by teacher score loss.
+- [x] Implement local assist suggestions, move capture, export, and optional incremental training.
+- [ ] Connect assist capture to a verified Chess.com computer-game observer.
 
 ## Sprint 5 — Chess.com bot integration
 
@@ -65,3 +66,4 @@ Updated: 2026-10-02. This file records implementation evidence; check boxes mean
 - Ten attempted local games each against random and greedy were recorded with unfinished games separate from draws. No Chess.com bot game has been played.
 - No Chess.com bot results have been measured.
 - Sprint 2 PR #8 passed CI and was merged by fast-forward; issue #2 closed. Sprint 3 held-out validation measured 728 positions for three checkpoints. One PUCT self-play game completed and supplied 160 positions; five-step fine-tuning worsened held-out value error, so that checkpoint is a pipeline proof only.
+- A scripted Fool's Mate proof recorded two local assisted positions, annotated both with Stockfish 19 at depth 4, assigned the mating blunder a 0.02 policy weight, and completed one warm-start training step. Its scripted source is explicit; no human or Chess.com result is inferred.

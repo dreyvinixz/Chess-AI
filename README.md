@@ -97,7 +97,7 @@ Local match results are stored in `reports/evaluation/`. These baselines measure
 
 ## Assist, autoplay, and bot ladder
 
-These workflows are planned in [ROADMAP.md](ROADMAP.md). They are deliberately absent from the CLI until they can be verified against the current Chess.com computer-game UI with a fail-closed bot guard. There are no recorded Chess.com bot results yet.
+Local human experience capture is available with `chess-ai assist --checkpoint PATH`. It shows student suggestions while you play a local random or greedy opponent, records your actual moves in SQLite, and can annotate them offline with Stockfish. Poor human moves receive low policy imitation weight. See [assist mode](docs/ASSIST_MODE.md). Chess.com observation, autoplay, and the bot ladder remain planned in [ROADMAP.md](ROADMAP.md) until they can be verified against the current computer-game UI with a fail-closed bot guard. There are no recorded Chess.com bot results yet.
 
 ## Project structure
 
@@ -113,6 +113,7 @@ Each run stores its complete configuration, environment metadata, Git commit, da
 - [WSL2 and CUDA](docs/WSL2_CUDA.md) · [Training](docs/TRAINING.md) · [Search](docs/SEARCH.md)
 - [Evaluation](docs/EVALUATION.md) · [Benchmarks](docs/BENCHMARKS.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Chess.com safety boundary](docs/CHESSCOM.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
+- [Assist mode and experience](docs/ASSIST_MODE.md)
 
 ## Safety boundary
 

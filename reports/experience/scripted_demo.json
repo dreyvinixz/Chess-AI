@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "source": "data/processed/demo-experience.sqlite",
+  "output": "data/processed/demo-experience.jsonl",
+  "output_sha256": "16d47c1091d7b0f9624dd443764f7c21ddd37a9ac86859d02b39adbfb030e043",
+  "positions": 2,
+  "min_weight": 0.02,
+  "created_at": "2026-10-02T22:10:52.947759+00:00"
+}
