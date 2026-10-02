@@ -1,14 +1,20 @@
 """Streaming PGN preparation and line oriented training records."""
 
 import hashlib
+import io
 import json
+import random
 import sqlite3
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterator
+from typing import Iterable, Iterator, TypeVar
 
 import chess
 import chess.pgn
+import zstandard
+
+T = TypeVar("T")
 
 
 def records(path: Path) -> Iterator[dict]:
@@ -18,12 +24,39 @@ def records(path: Path) -> Iterator[dict]:
                 yield json.loads(line)
 
 
+def reservoir_sample(items: Iterable[T], limit: int, seed: int) -> list[T]:
+    if limit <= 0:
+        raise ValueError("Sample limit must be positive")
+    rng = random.Random(seed)
+    chosen: list[T] = []
+    for seen, item in enumerate(items, start=1):
+        if seen <= limit:
+            chosen.append(item)
+        else:
+            candidate = rng.randrange(seen)
+            if candidate < limit:
+                chosen[candidate] = item
+    return chosen
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+@contextmanager
+def open_pgn(path: Path) -> Iterator[io.TextIOBase]:
+    if path.suffix == ".zst":
+        with path.open("rb") as raw:
+            with zstandard.ZstdDecompressor().stream_reader(raw) as decompressed:
+                with io.TextIOWrapper(decompressed, encoding="utf-8", errors="replace") as text:
+                    yield text
+    else:
+        with path.open(encoding="utf-8", errors="replace") as text:
+            yield text
 
 
 def prepare_pgn(
@@ -47,7 +80,7 @@ def prepare_pgn(
     }
     accepted = 0
     try:
-        with source.open(encoding="utf-8", errors="replace") as stream:
+        with open_pgn(source) as stream:
             while game := chess.pgn.read_game(stream):
                 if game.errors:
                     continue

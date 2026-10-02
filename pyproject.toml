@@ -9,7 +9,7 @@ description = "Compact CUDA chess student with offline Stockfish teaching"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "GPL-3.0-or-later"
-dependencies = ["python-chess>=1.999", "numpy>=1.26", "torch>=2.5", "PyYAML>=6", "typer>=0.12", "rich>=13"]
+dependencies = ["python-chess>=1.999", "numpy>=1.26", "torch>=2.5", "PyYAML>=6", "typer>=0.12", "rich>=13", "zstandard>=0.23"]
 
 [project.optional-dependencies]
 browser = ["playwright>=1.50"]

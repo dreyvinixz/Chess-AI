@@ -68,9 +68,14 @@ def label_data(
     multipv: int = typer.Option(3),
     temperature_cp: float = typer.Option(100.0, help="Policy softmax temperature in centipawns."),
     limit: int = typer.Option(0),
+    sample_seed: int | None = typer.Option(
+        None, help="Reservoir-sample --limit positions across the source."
+    ),
 ) -> None:
     """Generate offline Stockfish policy/value labels for prepared positions."""
-    count = label_positions(source, output, engine, depth, multipv, temperature_cp, limit)
+    count = label_positions(
+        source, output, engine, depth, multipv, temperature_cp, limit, sample_seed
+    )
     console.print(f"Labeled {count} positions: {output}")
 
 
@@ -80,10 +85,14 @@ def train(
     config: Path = typer.Option(Path("configs/gtx1650.yaml"), exists=True),
     run_dir: Path = typer.Option(Path("runs/latest")),
     resume: Path | None = typer.Option(None, exists=True),
+    max_steps: int | None = typer.Option(None, min=1, help="Override training.max_steps."),
     report_dir: Path = typer.Option(Path("reports/training"), help="Local JSON summary directory."),
 ) -> None:
     """Train the student from PGN imitation or teacher labels; save a resumable checkpoint."""
-    checkpoint = train_model(load_config(config), dataset, run_dir, resume)
+    experiment = load_config(config)
+    if max_steps is not None:
+        experiment["training"]["max_steps"] = max_steps
+    checkpoint = train_model(experiment, dataset, run_dir, resume)
     environment = json.loads((run_dir / "environment.json").read_text(encoding="utf-8"))
     epochs = [
         json.loads(line)

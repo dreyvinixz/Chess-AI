@@ -2,9 +2,10 @@ from pathlib import Path
 
 import chess
 import torch
+import zstandard
 
 from chess_ai.config import load_config
-from chess_ai.data import prepare_pgn, records
+from chess_ai.data import prepare_pgn, records, reservoir_sample
 from chess_ai.search import policy_only, puct
 from chess_ai.training import load_model, train
 
@@ -22,6 +23,13 @@ def test_pgn_split_and_checkpoint(tmp_path):
     assert sum(manifest["positions"].values()) == 4
     assert manifest["duplicates_skipped"] == 4
     assert len(manifest["files"]["train"]) == 64
+    compressed = tmp_path / "games.pgn.zst"
+    compressed.write_bytes(zstandard.ZstdCompressor().compress(pgn.read_bytes()))
+    compressed_manifest = prepare_pgn(
+        compressed, tmp_path / "compressed", min_elo=1800, max_games=2
+    )
+    assert compressed_manifest["positions"] == manifest["positions"]
+    assert compressed_manifest["files"] == manifest["files"]
     split = next(name for name, count in manifest["positions"].items() if count)
     dataset = tmp_path / "processed" / f"{split}.jsonl"
     assert len(list(records(dataset))) == 4
@@ -42,3 +50,10 @@ def test_pgn_split_and_checkpoint(tmp_path):
     assert policy_only(model, board, torch.device("cpu")).move in board.legal_moves
     assert policy_only(inference_model, board, torch.device("cpu")).move in board.legal_moves
     assert puct(model, board, torch.device("cpu"), simulations=2).move in board.legal_moves
+
+
+def test_reservoir_sample_is_deterministic():
+    first = reservoir_sample(range(100), 10, 42)
+    assert first == reservoir_sample(range(100), 10, 42)
+    assert len(first) == len(set(first)) == 10
+    assert any(value >= 50 for value in first)

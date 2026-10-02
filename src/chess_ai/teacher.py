@@ -9,7 +9,7 @@ from pathlib import Path
 import chess
 import chess.engine
 
-from chess_ai.data import records, sha256_file
+from chess_ai.data import records, reservoir_sample, sha256_file
 
 
 def score_cp(score: chess.engine.PovScore, turn: chess.Color, mate_cp: int = 10000) -> int:
@@ -68,7 +68,10 @@ def label_positions(
     multipv: int = 3,
     temperature_cp: float = 100,
     limit: int = 0,
+    sample_seed: int | None = None,
 ) -> int:
+    if sample_seed is not None and limit <= 0:
+        raise ValueError("A positive --limit is required with --sample-seed")
     local_engine = Path.cwd() / "tools" / "stockfish-local" / "stockfish"
     if engine_path == "stockfish" and local_engine.is_file():
         engine_path = str(local_engine)
@@ -88,7 +91,12 @@ def label_positions(
         engine_id = engine.id.copy()
         if "UCI_ShowWDL" in engine.options:
             engine.configure({"UCI_ShowWDL": True})
-        for row in records(source):
+        positions = (
+            reservoir_sample(records(source), limit, sample_seed)
+            if sample_seed is not None
+            else records(source)
+        )
+        for row in positions:
             board = chess.Board(row["fen"])
             if not board.is_valid():
                 raise ValueError(f"Invalid source FEN: {row['fen']}")
@@ -118,6 +126,7 @@ def label_positions(
         "multipv": multipv,
         "temperature_cp": temperature_cp,
         "positions": count,
+        "sample_seed": sample_seed,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     destination.with_suffix(".manifest.json").write_text(
