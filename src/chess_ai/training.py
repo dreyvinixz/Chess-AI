@@ -46,7 +46,7 @@ class PositionDataset(Dataset):
 
     def __getitem__(
         self, index: int
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         if self._stream is None or self._stream_pid != os.getpid():
             if self._stream is not None:
                 self._stream.close()
@@ -77,11 +77,15 @@ class PositionDataset(Dataset):
             target[action_index(move)] = 1
         legal = torch.zeros(ACTION_SIZE, dtype=torch.bool)
         legal[legal_indices(board)] = True
+        policy_weight = float(row.get("policy_weight", 1.0))
+        if not np.isfinite(policy_weight) or not 0 <= policy_weight <= 1:
+            raise ValueError(f"Invalid policy weight at row {index}")
         return (
             torch.from_numpy(encode_board(board)),
             target,
             torch.tensor(float(row["value"])),
             legal,
+            torch.tensor(policy_weight),
         )
 
 
@@ -334,10 +338,11 @@ def train(
             model.train()
             optimizer.zero_grad(set_to_none=True)
             pending = 0
-            for features, target, value, legal in loader:
+            for features, target, value, legal, policy_weight in loader:
                 batch_started = perf_counter()
-                features, target, value, legal = (
-                    x.to(device, non_blocking=True) for x in (features, target, value, legal)
+                features, target, value, legal, policy_weight = (
+                    x.to(device, non_blocking=True)
+                    for x in (features, target, value, legal, policy_weight)
                 )
                 microbatch_size = len(features)
                 while True:
@@ -351,7 +356,10 @@ def train(
                                 log_probs = F.log_softmax(
                                     logits.masked_fill(~legal[start:end], -1e4), dim=-1
                                 )
-                                policy_loss = -(target[start:end] * log_probs).sum(dim=-1).mean()
+                                policy_loss = (
+                                    -(target[start:end] * log_probs).sum(dim=-1)
+                                    * policy_weight[start:end]
+                                ).mean()
                                 value_loss = F.mse_loss(estimate, value[start:end])
                                 loss = policy_loss + config["training"]["value_weight"] * value_loss
                                 entropy = -(log_probs.exp() * log_probs).sum(dim=-1).mean()

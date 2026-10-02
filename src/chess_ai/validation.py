@@ -27,7 +27,7 @@ def validate_dataset(
     policy_sum = value_sum = top1_sum = 0.0
     positions = 0
     with torch.inference_mode():
-        for features, target, value, legal in loader:
+        for features, target, value, legal, _policy_weight in loader:
             features, target, value, legal = (
                 tensor.to(device, non_blocking=True)
                 for tensor in (features, target, value, legal)

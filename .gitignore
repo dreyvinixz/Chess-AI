@@ -18,6 +18,9 @@ browser_profiles/
 browser_binaries/
 tools/stockfish-local/
 *.sqlite3
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
 *.log
 *.png
 .env*

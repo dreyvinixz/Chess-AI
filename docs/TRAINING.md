@@ -32,3 +32,5 @@ chess-ai train --dataset data/processed/self-play.jsonl --config configs/gtx1650
 ```
 
 Self-play stores only completed games. Games still running at `--max-plies` are marked `U` and omitted from training rather than labeled draws. The adjacent manifest includes checkpoint and output hashes, search settings, seed, game results, node/inference totals, and elapsed time. PUCT root noise is used only for self-play. Set `--noise-alpha 0` to disable it. Self-play on a weak checkpoint can reinforce errors, so compare the new checkpoint on held-out data and local matches before adopting it.
+
+Human-experience exports include a `policy_weight` between 0 and 1. Training multiplies the policy loss for that position by the weight but leaves teacher value loss intact. See [assist mode](ASSIST_MODE.md) for the post-game Stockfish annotation and quality rule.

@@ -2,6 +2,7 @@
 
 import csv
 import json
+import random
 import tempfile
 from pathlib import Path
 
@@ -15,7 +16,8 @@ from chess_ai.config import load_config
 from chess_ai.core import encode_board
 from chess_ai.data import prepare_pgn
 from chess_ai.doctor import write_report
-from chess_ai.evaluation import play_match, save_report
+from chess_ai.evaluation import baseline_move, play_match, save_report
+from chess_ai.experience import ExperienceStore
 from chess_ai.model import PolicyValueNet
 from chess_ai.search import policy_only, puct
 from chess_ai.self_play import generate_self_play
@@ -293,6 +295,131 @@ def play(
         board.push(move)
     console.print(board)
     console.print(f"Result: {board.result(claim_draw=True)}")
+
+
+@app.command()
+def assist(
+    checkpoint: Path = typer.Option(..., exists=True),
+    database: Path = typer.Option(Path("data/processed/experience.sqlite")),
+    opponent: str = typer.Option("greedy", help="Local random or greedy opponent."),
+    human_color: str = typer.Option("white"),
+    search: str = typer.Option("policy", help="policy or puct"),
+    simulations: int = typer.Option(16, min=1),
+    annotate_after: bool = typer.Option(True, help="Run offline Stockfish review after a game."),
+    engine_depth: int = typer.Option(8, min=1),
+    export: Path = typer.Option(Path("data/processed/human-experience.jsonl")),
+    train_after: bool = typer.Option(
+        False, help="Fine-tune from this checkpoint after annotation."
+    ),
+    fine_tune_steps: int = typer.Option(10, min=1),
+) -> None:
+    """Play a local opponent with student suggestions and record your actual moves."""
+    if opponent not in {"random", "greedy"}:
+        raise typer.BadParameter("Local assist opponent must be random or greedy")
+    if human_color not in {"white", "black"} or search not in {"policy", "puct"}:
+        raise typer.BadParameter("Use human-color white|black and search policy|puct")
+    if train_after and not annotate_after:
+        raise typer.BadParameter("--train-after requires --annotate-after")
+    model, device = _student(checkpoint)
+    human = chess.WHITE if human_color == "white" else chess.BLACK
+    board = chess.Board()
+    rng = random.Random(42)
+    with ExperienceStore(database) as store:
+        game_id = store.create_game(
+            "local_assist", f"local-{opponent}", str(checkpoint), human_color
+        )
+        while not board.is_game_over(claim_draw=True):
+            console.print(board)
+            if board.turn == human:
+                suggestion = (
+                    puct(model, board, device, simulations)
+                    if search == "puct"
+                    else policy_only(model, board, device)
+                )
+                console.print(f"FEN: {board.fen()} | side: {human_color}")
+                console.print(
+                    "Student top 5: "
+                    + ", ".join(
+                        f"{board.san(chess.Move.from_uci(uci))} {probability:.3f}"
+                        for uci, probability in suggestion.candidates
+                    )
+                )
+                console.print(
+                    f"Value: {suggestion.value:+.3f} | nodes: {suggestion.nodes} "
+                    f"| time: {suggestion.elapsed:.3f}s"
+                )
+                typed = typer.prompt("Your move (SAN or UCI; quit to exit)")
+                if typed.lower() == "quit":
+                    store.finish_game(game_id, "*")
+                    console.print(f"Game {game_id} saved as unfinished in {database}")
+                    return
+                try:
+                    move = board.parse_san(typed)
+                except ValueError:
+                    try:
+                        move = board.parse_uci(typed)
+                    except ValueError:
+                        console.print("Illegal move; try again.")
+                        continue
+                store.record_human_move(
+                    game_id, board, move, suggestion.policy, suggestion.value,
+                    suggestion.nodes, suggestion.elapsed,
+                )
+                console.print(
+                    f"Recorded: {board.san(move)} | student agreement: "
+                    f"{'yes' if move == suggestion.move else 'no'}"
+                )
+            else:
+                move = baseline_move(board, opponent, rng)
+                console.print(f"Opponent: {board.san(move)}")
+            board.push(move)
+        outcome = board.result(claim_draw=True)
+        store.finish_game(game_id, outcome)
+        console.print(f"Game {game_id} result: {outcome}")
+        if annotate_after:
+            try:
+                annotation = store.annotate_game(game_id, depth=engine_depth)
+            except FileNotFoundError as error:
+                console.print(str(error))
+                console.print("Game retained; run chess-ai annotate-experience later.")
+                return
+            console.print(f"Annotated {annotation['positions']} human moves offline.")
+            manifest = store.export_training(export)
+            console.print(f"Exported {manifest['positions']} positions to {export}")
+            if train_after and manifest["positions"]:
+                _, saved = load_model(checkpoint, device)
+                config = saved["config"].copy()
+                config["training"] = {
+                    **config["training"],
+                    "max_steps": fine_tune_steps,
+                    "learning_rate": min(config["training"]["learning_rate"], 1e-4),
+                }
+                run_dir = Path("runs") / f"assist-{game_id}"
+                trained = train_model(config, export, run_dir, init_checkpoint=checkpoint)
+                console.print(f"Fine-tuned checkpoint: {trained}")
+
+
+@app.command("annotate-experience")
+def annotate_experience(
+    game_id: int = typer.Argument(..., min=1),
+    database: Path = typer.Option(Path("data/processed/experience.sqlite"), exists=True),
+    engine: str = typer.Option("stockfish"),
+    depth: int = typer.Option(8, min=1),
+) -> None:
+    """Review saved human moves with Stockfish after the game is finished."""
+    with ExperienceStore(database) as store:
+        console.print_json(data=store.annotate_game(game_id, engine, depth))
+
+
+@app.command("export-experience")
+def export_experience(
+    database: Path = typer.Option(Path("data/processed/experience.sqlite"), exists=True),
+    output: Path = typer.Option(Path("data/processed/human-experience.jsonl")),
+    min_weight: float = typer.Option(0.02, min=0, max=1),
+) -> None:
+    """Export annotated human moves with teacher values and quality weights."""
+    with ExperienceStore(database) as store:
+        console.print_json(data=store.export_training(output, min_weight))
 
 
 @app.command("smoke-test")
