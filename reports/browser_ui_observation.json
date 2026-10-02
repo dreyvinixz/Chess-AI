@@ -1,0 +1,17 @@
+{
+  "observed_at_date": "2026-10-02",
+  "source": "anonymous live Chess.com computer page via local Playwright Chromium",
+  "url": "https://www.chess.com/play/computer",
+  "board_selector": "#board-play-computer",
+  "piece_class_example": "piece wp square-54",
+  "mainline_selector": "[data-node].main-line-ply .node-highlight-content",
+  "bot_name_selector": "[data-test-element=\"user-tagline-username\"]",
+  "bot_marker_selector": ".bot-speech-avatar-and-wrapper-bot",
+  "observed_bot_name": "Martinfoot",
+  "displayed_rating": 250,
+  "initial_fen_read_by_adapter": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  "manual_inspection_moves": ["e4", "c5"],
+  "adapter_move_probe": "e2e4 timed out without recorded SAN move",
+  "verified_autoplay": false,
+  "recorded_game_result": null
+}
