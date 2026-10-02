@@ -1,5 +1,6 @@
 """Command line interface for local training and evaluation."""
 
+import csv
 import json
 import tempfile
 from pathlib import Path
@@ -52,9 +53,10 @@ def prepare_data(
     min_elo: int = typer.Option(1800),
     max_games: int = typer.Option(0),
     seed: int = typer.Option(42),
+    deduplicate: bool = typer.Option(True, help="Skip repeated board positions across splits."),
 ) -> None:
     """Stream PGN into game-separated train, validation, and test JSONL."""
-    console.print_json(data=prepare_pgn(source, output, min_elo, max_games, seed))
+    console.print_json(data=prepare_pgn(source, output, min_elo, max_games, seed, deduplicate))
 
 
 @app.command("label-data")
@@ -64,10 +66,11 @@ def label_data(
     engine: str = typer.Option("stockfish", help="UCI engine executable."),
     depth: int = typer.Option(8),
     multipv: int = typer.Option(3),
+    temperature_cp: float = typer.Option(100.0, help="Policy softmax temperature in centipawns."),
     limit: int = typer.Option(0),
 ) -> None:
     """Generate offline Stockfish policy/value labels for prepared positions."""
-    count = label_positions(source, output, engine, depth, multipv, limit=limit)
+    count = label_positions(source, output, engine, depth, multipv, temperature_cp, limit)
     console.print(f"Labeled {count} positions: {output}")
 
 
@@ -77,9 +80,29 @@ def train(
     config: Path = typer.Option(Path("configs/gtx1650.yaml"), exists=True),
     run_dir: Path = typer.Option(Path("runs/latest")),
     resume: Path | None = typer.Option(None, exists=True),
+    report_dir: Path = typer.Option(Path("reports/training"), help="Local JSON summary directory."),
 ) -> None:
     """Train the student from PGN imitation or teacher labels; save a resumable checkpoint."""
-    console.print(str(train_model(load_config(config), dataset, run_dir, resume)))
+    checkpoint = train_model(load_config(config), dataset, run_dir, resume)
+    environment = json.loads((run_dir / "environment.json").read_text(encoding="utf-8"))
+    epochs = [
+        json.loads(line)
+        for line in (run_dir / "epochs.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    with (run_dir / "metrics.csv").open(newline="", encoding="utf-8") as stream:
+        last_metrics = None
+        for row in csv.DictReader(stream):
+            last_metrics = row
+    report = {
+        "run_dir": str(run_dir),
+        "checkpoint": str(checkpoint),
+        "config": json.loads((run_dir / "config.json").read_text(encoding="utf-8")),
+        "environment": environment,
+        "epochs": epochs,
+        "last_metrics": last_metrics,
+    }
+    save_report(report, report_dir / f"{run_dir.name}.json")
+    console.print(str(checkpoint))
 
 
 def _student(checkpoint: Path) -> tuple[PolicyValueNet, torch.device]:
