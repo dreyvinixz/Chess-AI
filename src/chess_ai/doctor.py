@@ -11,6 +11,10 @@ import torch
 
 def system_report() -> dict:
     cuda = torch.cuda.is_available()
+    from pathlib import Path
+
+    local_engine = Path.cwd() / "tools" / "stockfish-local" / "stockfish"
+    stockfish = shutil.which("stockfish") or (str(local_engine) if local_engine.is_file() else None)
     report = {
         "os": platform.platform(),
         "wsl2": "microsoft" in platform.release().lower(),
@@ -18,7 +22,7 @@ def system_report() -> dict:
         "torch": torch.__version__,
         "cuda_available": cuda,
         "cuda_runtime": torch.version.cuda,
-        "stockfish": shutil.which("stockfish"),
+        "stockfish": stockfish,
         "browser_automation": _has_playwright(),
     }
     if cuda:

@@ -16,6 +16,7 @@ checkpoints/
 weights/
 browser_profiles/
 browser_binaries/
+tools/stockfish-local/
 *.sqlite3
 *.log
 *.png
