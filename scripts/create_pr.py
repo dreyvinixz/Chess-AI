@@ -1,15 +1,23 @@
-"""Open the current feature branch as a draft PR using Git Credential Manager."""
+"""Open the current feature branch as a PR using Git Credential Manager."""
 
+import argparse
 import base64
 import json
 import subprocess
 import urllib.error
 import urllib.request
+from pathlib import Path
 
 REPO = "dreyvinixz/Chess-AI"
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--title", required=True)
+    parser.add_argument("--body-file", required=True, type=Path)
+    parser.add_argument("--base", default="main")
+    parser.add_argument("--draft", action="store_true")
+    args = parser.parse_args()
     credentials = subprocess.run(
         ["git", "credential", "fill"],
         input="protocol=https\nhost=github.com\n\n",
@@ -35,31 +43,12 @@ def main() -> None:
         "User-Agent": "Chess-AI-roadmap",
         "X-GitHub-Api-Version": "2022-11-28",
     }
-    body = """## Scope
-- Package and configure the compact chess student for WSL2 GTX 1650.
-- Add legal actions, policy/value network, PGN preparation, offline teacher labels,
-  training, PUCT, local play, and CLI.
-- Add setup/design documentation, CPU CI, and sprint roadmap.
-
-## Evidence
-- WSL2 doctor: GTX 1650, 4096 MiB, PyTorch 2.6.0+cu124, FP16 operation passed.
-- `ruff check src tests`: passed.
-- `pytest -q`: 12 passed.
-- `chess-ai smoke-test`: passed on CUDA.
-- `python -m build`: sdist and wheel built.
-
-## Limits
-- Stockfish is absent locally; teacher labeling still needs a real UCI run.
-- Chess.com browser integration and bot results belong to later sprints.
-
-Closes #1 after CI verification.
-"""
     payload = {
-        "title": "feat: establish local CUDA chess vertical slice",
+        "title": args.title,
         "head": branch,
-        "base": "main",
-        "body": body,
-        "draft": True,
+        "base": args.base,
+        "body": args.body_file.read_text(encoding="utf-8"),
+        "draft": args.draft,
     }
     request = urllib.request.Request(
         f"https://api.github.com/repos/{REPO}/pulls",
@@ -74,7 +63,7 @@ Closes #1 after CI verification.
         raise SystemExit(
             f"GitHub API returned HTTP {exc.code}; check PR write permission"
         ) from None
-    print(f"Created draft PR #{pr['number']}: {pr['html_url']}")
+    print(f"Created PR #{pr['number']}: {pr['html_url']}")
 
 
 if __name__ == "__main__":
