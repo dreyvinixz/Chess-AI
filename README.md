@@ -11,7 +11,7 @@
 - Configurable residual CNN, CPU or CUDA inference, local terminal play, and PUCT.
 - PGN preparation with game-level splits and SHA-256 source manifest.
 - Offline Stockfish MultiPV policy/value labels, resumable supervised training, and checkpoint metadata.
-- Random and greedy local baselines, JSON match reports, speed benchmark, and system doctor.
+- Random, greedy, and explicit limited-Stockfish opponents, held-out validation, student self-play, JSON match reports, speed benchmark, and system doctor.
 - Fail-safe bot-only browser integration is tracked in the [roadmap](ROADMAP.md); it is not implemented yet.
 
 ## Architecture
@@ -32,7 +32,7 @@ Stockfish produces training labels and optional external baseline results. Stude
 
 ## Hardware target
 
-The primary target is Ubuntu under WSL2, PyTorch CUDA, and the 4 GB GTX 1650. The `gtx1650.yaml` profile uses a 64-channel, four-block network. VRAM and speed claims will be published only after measured runs. CPU operation is supported for CI and debugging.
+The primary target is Ubuntu under WSL2, PyTorch CUDA, and the 4 GB GTX 1650. The `gtx1650.yaml` profile uses a 64-channel, four-block network. A bounded 100-step run on a GTX 1650 Max-Q used 112 MiB peak PyTorch allocated VRAM; [benchmarks](docs/BENCHMARKS.md) give the exact scope and limitations. CPU operation is supported for CI and debugging.
 
 ## Quick start
 
@@ -86,10 +86,14 @@ The downloader checks the official release SHA-256 and stores its archive and ex
 ```bash
 chess-ai evaluate --checkpoint runs/demo/checkpoint.pt --opponent random --games 10
 chess-ai evaluate --checkpoint runs/demo/checkpoint.pt --opponent greedy --games 10 --search puct
+chess-ai evaluate --checkpoint runs/demo/checkpoint.pt --opponent stockfish --engine-depth 4 --games 2
+chess-ai validate --checkpoint runs/lichess-supervised-100/inference.pt --dataset data/processed/lichess-2013-01-100/validation.jsonl
 chess-ai benchmark --checkpoint runs/demo/checkpoint.pt
 ```
 
 Local match results are stored in `reports/evaluation/`. These baselines measure early progress and do not establish Chess.com bot strength. See [evaluation](docs/EVALUATION.md) and [benchmarks](docs/BENCHMARKS.md).
+
+`chess-ai self-play --checkpoint runs/demo/checkpoint.pt --games 2 --search puct --simulations 16` writes completed student-only games and an adjacent manifest. The resulting JSONL can warm-start a new run with `chess-ai train --dataset data/processed/self-play.jsonl --init-checkpoint runs/demo/checkpoint.pt --config configs/debug.yaml`. One-game fine-tuning worsened held-out value error in our proof, so compare checkpoints before adoption.
 
 ## Assist, autoplay, and bot ladder
 
